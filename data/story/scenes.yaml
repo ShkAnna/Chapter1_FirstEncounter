@@ -1,0 +1,73 @@
+game:
+  title: "Chapitre 1: Première Rencontre"
+  visual_style: "2D top-down chibi / semi-pixel art"
+  language: "fr"
+
+scenes:
+  - id: prologue
+    title: "Avant que tout commence"
+    status: draft
+    location: "A completer"
+    mood: "curieux, doux, legerement magique"
+    player_goal: "Explorer le lieu et trouver le premier indice."
+    companion_role: "Guider sans tout expliquer."
+    memory_items:
+      - id: first_clue
+        label: "Premier indice"
+        description: "A completer."
+    dialogue_notes:
+      - speaker: companion
+        text: "Tu te souviens de ce moment ?"
+
+  - id: first_meeting
+    title: "Première Rencontre"
+    status: draft
+    location: "A completer"
+    mood: "timide, drole, important"
+    player_goal: "Retrouver le detail qui a lance la rencontre."
+    companion_role: "Reagir aux objets et faire remonter le souvenir."
+    memory_items:
+      - id: meeting_detail
+        label: "Le detail de la rencontre"
+        description: "A completer."
+    dialogue_notes:
+      - speaker: hero
+        text: "Attends... c'etait vraiment comme ca ?"
+      - speaker: companion
+        text: "Presque. Mais dans mon souvenir, c'etait encore mieux."
+
+  - id: first_spark
+    title: "Le premier declic"
+    status: draft
+    location: "A completer"
+    mood: "complice, tendre, lumineux"
+    player_goal: "Assembler trois petits souvenirs pour ouvrir la suite."
+    companion_role: "Suivre le joueur et commenter chaque souvenir."
+    memory_items:
+      - id: small_detail_1
+        label: "Petit detail 1"
+        description: "A completer."
+      - id: small_detail_2
+        label: "Petit detail 2"
+        description: "A completer."
+      - id: small_detail_3
+        label: "Petit detail 3"
+        description: "A completer."
+    dialogue_notes:
+      - speaker: companion
+        text: "C'est la que j'ai commence a sourire sans raison."
+
+  - id: anniversary
+    title: "Un an plus tard"
+    status: draft
+    location: "A completer"
+    mood: "romantique, sincere, final"
+    player_goal: "Lire le message final."
+    companion_role: "Livrer le message d'anniversaire."
+    memory_items:
+      - id: final_message
+        label: "Message final"
+        description: "A completer."
+    dialogue_notes:
+      - speaker: companion
+        text: "Joyeux premier anniversaire."

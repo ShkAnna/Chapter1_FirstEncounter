@@ -1,0 +1,22 @@
+characters:
+  hero:
+    id: hero
+    role: player
+    display_name: "Lui"
+    description: "Personnage controle par le joueur."
+    personality_notes:
+      - "A completer."
+    visual_references:
+      photo_folder: "data/photos/raw/people/him"
+      target_asset_folder: "public/assets/characters/hero"
+
+  companion:
+    id: companion
+    role: bot
+    display_name: "Moi"
+    description: "Companion qui suit le joueur, parle et declenche certains souvenirs."
+    personality_notes:
+      - "A completer."
+    visual_references:
+      photo_folder: "data/photos/raw/people/me"
+      target_asset_folder: "public/assets/characters/companion"

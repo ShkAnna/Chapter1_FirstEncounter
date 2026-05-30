@@ -1,0 +1,15 @@
+.DS_Store
+node_modules/
+dist/
+.vite/
+
+# Private source photos stay local.
+data/photos/raw/**
+data/photos/selected/**
+!data/photos/raw/
+!data/photos/raw/**/
+!data/photos/selected/
+!data/photos/selected/**/
+!data/photos/README.md
+!data/photos/raw/**/.gitkeep
+!data/photos/selected/**/.gitkeep
