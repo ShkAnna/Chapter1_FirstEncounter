@@ -6,68 +6,219 @@ game:
 scenes:
   - id: prologue
     title: "Avant que tout commence"
-    status: draft
-    location: "A completer"
-    mood: "curieux, doux, legerement magique"
-    player_goal: "Explorer le lieu et trouver le premier indice."
-    companion_role: "Guider sans tout expliquer."
+    status: scripted
+    location: "Chambre d'Anna, puis chambre d'Alex"
+    mood: "curieux, drôle, légèrement magique"
+    player_goal: "Découvrir comment le cours de tir a rendu la première rencontre possible."
+    companion_role: "Anna apparaît d'abord comme personnage principal de la scène, puis Alex prend le relais devant son ordinateur."
+    script_file: "data/story/scenes/prologue-before-meeting.md"
     memory_items:
-      - id: first_clue
-        label: "Premier indice"
-        description: "A completer."
+      - id: unil_sport_registration
+        label: "Inscription au tir"
+        description: "Anna choisit le tir sur le site d'Unil Sport et envoie un mail à Alexandre C. pour demander l'autorisation de participer au cours."
+      - id: alex_authorization_reply
+        label: "La réponse d'Alex"
+        description: "Alex confirme qu'il n'y a pas de restriction particulière pour les ressortissants ukrainiens et accepte la participation d'Anna."
     dialogue_notes:
       - speaker: companion
-        text: "Tu te souviens de ce moment ?"
+        text: "Wow, ça a l'air trop cool ! Let's go, on fait ça."
+      - speaker: hero
+        text: "Trop bien, c'est fait !"
 
   - id: first_meeting
     title: "Première Rencontre"
-    status: draft
-    location: "A completer"
-    mood: "timide, drole, important"
-    player_goal: "Retrouver le detail qui a lance la rencontre."
-    companion_role: "Reagir aux objets et faire remonter le souvenir."
+    status: scripted
+    location: "Parc près d'Unil Sport, parking, terrain de foot et bord du lac Léman"
+    mood: "ensoleillé, vivant, premier contact"
+    player_goal: "Guider le groupe depuis le parc jusqu'au bon bus sur le parking."
+    companion_role: "Anna fait partie du groupe d'élèves qui suit Alex."
+    script_file: "data/story/scenes/first-meeting-unil-sport.md"
     memory_items:
-      - id: meeting_detail
-        label: "Le detail de la rencontre"
-        description: "A completer."
+      - id: unil_sport_group
+        label: "Le groupe du premier cours"
+        description: "Alex rencontre les sept élèves du module de tir au pistolet dans le petit parc près d'Unil Sport."
+      - id: white_vw_bus
+        label: "Le petit bus blanc"
+        description: "Alex trouve et ouvre le bon bus, puis tout le groupe monte pour partir vers le stand de tir."
     dialogue_notes:
       - speaker: hero
-        text: "Attends... c'etait vraiment comme ca ?"
+        text: "Salut ! Enchanté tout le monde, je suis votre moniteur de tir."
       - speaker: companion
-        text: "Presque. Mais dans mon souvenir, c'etait encore mieux."
+        text: "C'est ici que tout a vraiment commencé."
 
-  - id: first_spark
-    title: "Le premier declic"
-    status: draft
-    location: "A completer"
-    mood: "complice, tendre, lumineux"
-    player_goal: "Assembler trois petits souvenirs pour ouvrir la suite."
-    companion_role: "Suivre le joueur et commenter chaque souvenir."
+  - id: arrival_vernand
+    title: "Arrivée au stand de Vernand"
+    status: scripted
+    location: "Parking du stand de tir de Vernand, restaurant et entrée du stand"
+    mood: "réaliste, animé, début d'aventure"
+    player_goal: "Faire descendre le groupe du bus et guider tout le monde jusqu'à l'entrée du stand."
+    companion_role: "Anna descend du bus avec les autres élèves et suit Alex jusqu'à l'entrée."
+    script_file: "data/story/scenes/arrival-vernand-parking.md"
     memory_items:
-      - id: small_detail_1
-        label: "Petit detail 1"
-        description: "A completer."
-      - id: small_detail_2
-        label: "Petit detail 2"
-        description: "A completer."
-      - id: small_detail_3
-        label: "Petit detail 3"
-        description: "A completer."
+      - id: vernand_arrival
+        label: "Arrivée à Vernand"
+        description: "Le bus arrive au parking du stand de tir de Vernand, près du restaurant et des autres tireurs."
+      - id: black_tool_case
+        label: "La caisse noire"
+        description: "Alex sort une caisse à outils noire sur roulettes avant de guider le groupe vers l'entrée du stand."
+    dialogue_notes:
+      - speaker: hero
+        text: "Maintenant, on va rentrer au stand, mettez vos pamirs et on peut y aller."
+
+  - id: vernand_safety_and_first_shots
+    title: "Les premières consignes"
+    status: scripted
+    location: "Intérieur du stand de Vernand et pas de tir 25 m"
+    mood: "concentré, impressionné, premier déclic discret"
+    player_goal: "Expliquer les règles, lancer la première série de tir, puis aller voir les élèves."
+    companion_role: "Anna écoute les consignes, tire avec le premier groupe, puis échange avec Alex."
+    script_file: "data/story/scenes/vernand-safety-and-first-shots.md"
+    memory_items:
+      - id: safety_briefing
+        label: "Les règles de sécurité"
+        description: "Alex explique les quatre règles fondamentales de sécurité avant d'autoriser les élèves à tirer."
+      - id: anna_first_shots
+        label: "Les premiers tirs d'Anna"
+        description: "Anna tire au pistolet 25 m, puis Alex vient commenter ses impacts et l'encourager."
+      - id: alex_first_thought
+        label: "La première pensée d'Alex"
+        description: "Après avoir parlé avec Anna, Alex pense qu'elle est très chou."
+    dialogue_notes:
+      - speaker: hero
+        text: "Tout d'abord, avant de faire du tir, il faut que vous appreniez les quatre règles fondamentales de sécurité."
+      - speaker: companion
+        text: "Merci beaucoup ! J'ai tout compris."
+
+  - id: second_shooting_lesson
+    title: "Deuxième cours de tir"
+    status: scripted
+    location: "Pas de tir 25 m de Vernand"
+    mood: "familier, attentif, attirance discrète"
+    player_goal: "Observer les élèves pendant la deuxième séance et corriger la posture d'Anna."
+    companion_role: "Anna tire dans le groupe et commence à être contente de revoir Alex."
+    script_file: "data/story/scenes/second-shooting-lesson.md"
+    memory_items:
+      - id: one_week_later
+        label: "Une semaine plus tard"
+        description: "Le deuxième cours commence directement au pas de tir 25 m."
+      - id: anna_posture_advice
+        label: "La posture d'Anna"
+        description: "Alex remarque que les coups d'Anna partent un peu à gauche et lui conseille de changer légèrement la position de ses pieds."
+      - id: anna_happy_to_see_alex
+        label: "Contente de le revoir"
+        description: "Anna pense qu'Alex est intelligent, attentif, sympa, et qu'elle est très contente de le revoir."
+    dialogue_notes:
+      - speaker: hero
+        text: "Très bons résultats ! Tu peux changer un peu la position de tes pieds."
+      - speaker: companion
+        text: "Merci beaucoup ! Je vais essayer maintenant avec la nouvelle posture."
+
+  - id: final_course_farewell
+    title: "Fin du dernier cours"
+    status: scripted
+    location: "Parking d'Unil Sport"
+    mood: "fin de chapitre, occasion à ne pas rater"
+    player_goal: "Ranger le bus, ne pas partir trop vite, puis proposer à Anna de la déposer au métro EPFL."
+    companion_role: "Anna reste doucement près du parking avec presque plus de batterie, en espérant réussir à rentrer."
+    script_file: "data/story/scenes/final-course-farewell.md"
+    memory_items:
+      - id: final_course_group_goodbye
+        label: "La fin du dernier cours"
+        description: "Alex remercie les élèves près du bus sur le parking d'Unil Sport, puis le groupe se disperse."
+      - id: anna_low_battery
+        label: "1% de batterie"
+        description: "Anna reste près du parking avec presque plus de batterie sur son téléphone."
+      - id: alex_offers_ride
+        label: "Le trajet vers EPFL"
+        description: "Alex propose à Anna de la déposer vers le métro EPFL."
+    dialogue_notes:
+      - speaker: hero
+        text: "Est-ce que je peux te ramener quelque part par hasard ?"
+      - speaker: companion
+        text: "Oui, ce serait génial ! Merci beaucoup, c'est très gentil !"
+
+  - id: whatsapp_miam_invitation
+    title: "Quelques jours plus tard"
+    status: scripted
+    location: "Conversation WhatsApp"
+    mood: "complice, enthousiaste, premier vrai rendez-vous qui se prépare"
+    player_goal: "Lire la conversation qui mène à la proposition de se revoir."
+    companion_role: "Anna réagit avec enthousiasme aux messages d'Alex."
+    script_file: "data/story/scenes/whatsapp-miam-invitation.md"
+    data_file: "data/story/chats/whatsapp-miam-invitation.yaml"
+    memory_items:
+      - id: miam_invitation
+        label: "L'invitation au Miam Festival"
+        description: "Alex propose à Anna d'aller au Miam Festival le weekend du 7 juin."
+      - id: polylan_visit
+        label: "L'invitation à PolyLAN"
+        description: "Alex invite Anna à venir le voir à Beaulieu pendant PolyLAN."
     dialogue_notes:
       - speaker: companion
-        text: "C'est la que j'ai commence a sourire sans raison."
+        text: "Oui avec plaisir 😊"
 
-  - id: anniversary
-    title: "Un an plus tard"
-    status: draft
-    location: "A completer"
-    mood: "romantique, sincere, final"
-    player_goal: "Lire le message final."
-    companion_role: "Livrer le message d'anniversaire."
+  - id: polylan_lan_date
+    title: "Lendemain à PolyLAN"
+    status: scripted
+    location: "Ilmac Lausanne / Beaulieu, espace PolyLAN"
+    mood: "geek, vivant, cozy, complice"
+    player_goal: "Explorer PolyLAN avec Anna, tester les activités, manger au bar et jouer aux deux jeux aux places d'Alex."
+    companion_role: "Anna suit Alex automatiquement et participe aux activités à deux."
+    script_file: "data/story/scenes/polylan-lan-date.md"
     memory_items:
-      - id: final_message
-        label: "Message final"
-        description: "A completer."
+      - id: polylan_discovery
+        label: "Découverte de PolyLAN"
+        description: "Alex fait découvrir à Anna l'ambiance LAN party: ordinateurs, finales, bar, VR et joueurs partout."
+      - id: cozy_lan_places
+        label: "Les places d'Alex"
+        description: "Deux places réservées côte à côte avec ordinateurs, décorations roses, néons et touches LoL/Ahri."
+      - id: late_night_walk
+        label: "2 heures du matin"
+        description: "Après avoir joué ensemble, Alex propose d'accompagner Anna jusqu'à l'arrêt de bus."
     dialogue_notes:
+      - speaker: hero
+        text: "Bienvenue à PolyLAN. Vas-y, on va se balader et regarder ce qu'il y a."
+      - speaker: hero
+        text: "Oh, le temps est passé trop vite. Il est déjà 2 heures du matin."
+
+  - id: chaudron_missed_bus
+    title: "Le bus manqué"
+    status: scripted
+    location: "Arrêt de bus Place de Chauderon, Lausanne"
+    mood: "nuit, tendre, drôle, inattendu"
+    player_goal: "Vivre la scène de l'arrêt de bus et accompagner Anna vers la gare."
+    companion_role: "Anna attend son bus avec Alex, puis marche avec lui vers la gare."
+    script_file: "data/story/scenes/chaudron-missed-bus.md"
+    memory_items:
+      - id: bus_stop_hug
+        label: "Le câlin à l'arrêt"
+        description: "Alex et Anna se font un câlin pendant que le bus passe sans s'arrêter."
+      - id: walk_to_station
+        label: "Main dans la main"
+        description: "Après le bus manqué, Alex propose d'accompagner Anna jusqu'à la gare."
+    dialogue_notes:
+      - speaker: hero
+        text: "Je suis très content que tu aies pu venir."
       - speaker: companion
-        text: "Joyeux premier anniversaire."
+        text: "J'étais trop contente de découvrir cet événement de geeks avec toi."
+
+  - id: lausanne_station_first_kiss
+    title: "Le premier bisou"
+    status: scripted
+    location: "Gare de Lausanne, quai du train"
+    mood: "romantique, nocturne, final"
+    player_goal: "Lire la scène finale et le message d'anniversaire."
+    companion_role: "Anna dit au revoir à Alex avant de monter dans le train."
+    script_file: "data/story/scenes/lausanne-station-first-kiss.md"
+    memory_items:
+      - id: first_kiss
+        label: "Premier bisou"
+        description: "Anna et Alex se regardent, s'approchent, puis partagent leur premier bisou et un câlin."
+      - id: final_anniversary_message
+        label: "Message d'anniversaire"
+        description: "Le jeu se termine sur un message d'amour pour leur premier anniversaire, le 1er juin 2026."
+    dialogue_notes:
+      - speaker: hero
+        text: "Passe une belle nuit et fais de beaux rêves."
+      - speaker: companion
+        text: "Repose-toi bien et fais de beaux rêves toi aussi."

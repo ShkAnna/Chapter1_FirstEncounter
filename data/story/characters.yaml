@@ -3,9 +3,11 @@ characters:
     id: hero
     role: player
     display_name: "Lui"
-    description: "Personnage controle par le joueur."
+    age_approx: 30
+    description: "Alex, personnage contrôlé par le joueur."
     personality_notes:
-      - "A completer."
+      - "Moniteur de tir."
+      - "Calme, pédagogue, passionné par ce qu'il fait."
     visual_references:
       photo_folder: "data/photos/raw/people/him"
       target_asset_folder: "public/assets/characters/hero"
@@ -14,9 +16,10 @@ characters:
     id: companion
     role: bot
     display_name: "Moi"
-    description: "Companion qui suit le joueur, parle et declenche certains souvenirs."
+    age_approx: 25
+    description: "Anna, companion qui suit le joueur, parle et déclenche certains souvenirs."
     personality_notes:
-      - "A completer."
+      - "Curieuse, expressive et facilement émerveillée quand quelque chose l'intéresse."
     visual_references:
       photo_folder: "data/photos/raw/people/me"
       target_asset_folder: "public/assets/characters/companion"

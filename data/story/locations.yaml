@@ -1,0 +1,134 @@
+locations:
+  - id: unil_sport_park
+    label: "Petit parc près d'Unil Sport"
+    usage:
+      - first_meeting
+    reference_url: "https://maps.app.goo.gl/SFftX6PuRgsG9zi97"
+    visual_notes:
+      - "Petit parc avec des bancs."
+      - "Point de départ du groupe du cours de tir."
+
+  - id: unil_sport_parking
+    label: "Parking près d'Unil Sport"
+    usage:
+      - first_meeting
+      - final_course_farewell
+    reference_url: "https://maps.app.goo.gl/8piS4n4nQ24MTBCz6"
+    visual_notes:
+      - "Parking en épi, situé au nord-ouest du point de départ."
+      - "Plusieurs voitures interactives."
+      - "Un petit bus blanc VW pour huit passagers."
+      - "Lieu de retour à la fin du dernier cours de tir."
+
+  - id: football_field
+    label: "Terrain de foot à côté du parking"
+    usage:
+      - first_meeting
+    reference_url: "https://maps.app.goo.gl/4VAKNsT7GMDN86YJ9"
+    visual_notes:
+      - "Terrain ouvert à droite du parking."
+      - "Quelques personnages random jouent au foot."
+
+  - id: leman_beach
+    label: "Bord du lac Léman et plage"
+    usage:
+      - first_meeting
+    reference_url: "https://maps.app.goo.gl/koFcimZ6bPH7HHE19"
+    visual_notes:
+      - "Plus à droite du terrain de foot."
+      - "Eau animée par de petites vagues."
+      - "Vue sur les montagnes."
+      - "Ambiance de mai: soleil, fleurs et arbres verts."
+
+  - id: vernand_shooting_range_parking
+    label: "Parking du stand de tir de Vernand"
+    usage:
+      - arrival_vernand
+    reference_url: "https://maps.app.goo.gl/18k1FG8NMRQYVGAY6"
+    visual_notes:
+      - "Arrivée du petit bus blanc VW."
+      - "Quelques voitures déjà garées."
+      - "Quelques personnages près des voitures avec des fusils posés à côté d'eux."
+
+  - id: vernand_restaurant
+    label: "Restaurant près du stand de Vernand"
+    usage:
+      - arrival_vernand
+    reference_url: "https://maps.app.goo.gl/6WAFVfFTYubtey15A"
+    visual_notes:
+      - "Quelques tables dehors."
+      - "Personnages assis qui boivent, mangent ou discutent."
+
+  - id: vernand_shooting_range
+    label: "Stand de tir de Vernand"
+    usage:
+      - arrival_vernand
+    reference_url: "https://maps.app.goo.gl/QaBxTJkFMd3xDH3u5"
+    visual_notes:
+      - "Bâtiment du stand de tir."
+      - "Lieu de destination après le parking."
+
+  - id: vernand_shooting_range_entrance
+    label: "Entrée du stand de tir de Vernand"
+    usage:
+      - arrival_vernand
+    reference_url: "https://maps.app.goo.gl/g62YkKgFouG2ZmSc9"
+    visual_notes:
+      - "Porte d'entrée utilisée par Alex et les élèves."
+      - "Transition vers la scène intérieure."
+
+  - id: vernand_indoor_briefing_room
+    label: "Salle intérieure du stand de Vernand"
+    usage:
+      - vernand_safety_and_first_shots
+    reference_url: null
+    visual_notes:
+      - "Pièce intérieure avec une longue table au nord."
+      - "Trois pistolets différents posés sur la table."
+      - "Alex près de la table, élèves en demi-cercle."
+      - "Tous les personnages portent des pamirs."
+
+  - id: vernand_25m_range
+    label: "Pas de tir 25 m de Vernand"
+    usage:
+      - vernand_safety_and_first_shots
+      - second_shooting_lesson
+    reference_url: null
+    visual_notes:
+      - "Longue table avec cinq postes de tir et séparations."
+      - "Petite structure couverte ouverte vers l'extérieur."
+      - "Cibles à 25 m devant les tireurs."
+      - "Nature et verdure visibles autour des cibles."
+      - "Photos de référence à ajouter plus tard par l'utilisateur."
+
+  - id: ilmac_lausanne_polylan_hall
+    label: "Ilmac Lausanne / Beaulieu - espace PolyLAN"
+    usage:
+      - polylan_lan_date
+    reference_url: null
+    visual_notes:
+      - "Grand espace intérieur rectangulaire, long de gauche à droite."
+      - "Entrée sur le mur du bas, environ au quart de la longueur en partant de la droite."
+      - "Zone scène à droite, bar à gauche, rangées de tables LAN au centre."
+      - "Photos de référence à ajouter plus tard par l'utilisateur."
+      - "PolyLAN est une LAN party à Beaulieu Lausanne."
+
+  - id: place_chauderon_bus_stop
+    label: "Arrêt de bus Place de Chauderon"
+    usage:
+      - chaudron_missed_bus
+    reference_url: "https://maps.app.goo.gl/um1WJeQqXF7WLLtA8"
+    visual_notes:
+      - "Scène de nuit."
+      - "Bus qui arrive lentement de droite à gauche."
+      - "Alex et Anna attendent côte à côte."
+
+  - id: lausanne_station_platform
+    label: "Gare de Lausanne, quai du train"
+    usage:
+      - lausanne_station_first_kiss
+    reference_url: null
+    visual_notes:
+      - "Quai de nuit avec quelques personnages qui attendent."
+      - "Train derrière le quai, portes ouvertes."
+      - "Anna et Alex sont devant une porte du train."
