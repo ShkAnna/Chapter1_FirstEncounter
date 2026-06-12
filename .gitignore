@@ -2,6 +2,8 @@
 node_modules/
 dist/
 .vite/
+__pycache__/
+*.py[cod]
 
 # Private source photos stay local.
 data/photos/raw/**
@@ -13,3 +15,4 @@ data/photos/selected/**
 !data/photos/README.md
 !data/photos/raw/**/.gitkeep
 !data/photos/selected/**/.gitkeep
+public/assets/antigrav_test/

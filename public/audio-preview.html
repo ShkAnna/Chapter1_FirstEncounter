@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Écoute audio - Chapitre 1</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, system-ui, sans-serif;
+        background: #10131b;
+        color: #f4efe7;
+      }
+      body {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 32px 20px 64px;
+      }
+      h1 {
+        font-family: Georgia, serif;
+        color: #f2c14e;
+      }
+      h2 {
+        margin-top: 36px;
+        color: #9bd2ce;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 14px;
+      }
+      article {
+        padding: 14px;
+        border: 1px solid #3d465b;
+        border-radius: 10px;
+        background: #181d29;
+      }
+      strong {
+        display: block;
+        margin-bottom: 9px;
+      }
+      audio {
+        width: 100%;
+        height: 34px;
+      }
+      p {
+        color: #bcc4d1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Chapitre 1 - écoute des sons</h1>
+    <p>Maquettes originales. Une seule piste joue à la fois.</p>
+    <main id="tracks"></main>
+    <script>
+      const groups = {
+        Musiques: [
+          ["Écran titre - lac de nuit", "title-night-lake.ogg"],
+          ["Prologue - curiosité", "prologue-curiosity.ogg"],
+          ["Première rencontre - printemps", "first-meeting-spring.ogg"],
+          ["Vernand - concentration", "vernand-focused.ogg"],
+          ["Lien qui se construit", "growing-connection.ogg"],
+          ["WhatsApp - complice et joueur", "whatsapp-playful.ogg"],
+          ["PolyLAN - cozy néon", "polylan-cozy-neon.ogg"],
+          ["Chauderon - nuit tendre", "chauderon-tender-night.ogg"],
+          ["Finale - premier bisou", "finale-first-kiss.ogg"],
+          ["Transition souvenir", "transition-memory.ogg"],
+        ],
+        Ambiances: [
+          ["Chambre d'Anna - jour", "anna-room-day.ogg"],
+          ["Chambre d'Alex - nuit", "alex-room-night.ogg"],
+          ["UNIL - parc et lac", "unil-park-lake.ogg"],
+          ["Vernand - parking", "vernand-parking.ogg"],
+          ["Vernand - briefing", "vernand-briefing-room.ogg"],
+          ["Vernand - pas de tir", "vernand-shooting-range.ogg"],
+          ["PolyLAN - salle", "polylan-hall.ogg"],
+          ["Chauderon - ville de nuit", "chauderon-city-night.ogg"],
+          ["Gare de Lausanne - quai", "lausanne-station-platform.ogg"],
+        ],
+        Effets: [
+          ["Validation UI", "ui-confirm.ogg"],
+          ["Annulation UI", "ui-cancel.ogg"],
+          ["Dialogue suivant", "dialogue-next.ogg"],
+          ["Souvenir débloqué", "memory-unlocked.ogg"],
+          ["E-mail reçu", "email-received.ogg"],
+          ["E-mail envoyé", "email-sent.ogg"],
+          ["Message téléphone", "phone-message.ogg"],
+          ["Batterie faible", "phone-low-battery.ogg"],
+          ["Pas sur pierre", "footsteps-stone-loop.ogg"],
+          ["Clavier", "keyboard-typing.ogg"],
+          ["Porte du minibus", "minibus-door.ogg"],
+          ["Moteur du minibus", "minibus-engine.ogg"],
+          ["Bus qui passe", "city-bus-pass.ogg"],
+          ["Porte du train", "train-door.ogg"],
+          ["Départ du train", "train-departure.ogg"],
+          ["Tir .22 LR intérieur", "shooting-22lr-indoor.ogg"],
+          ["Petit impact", "soft-impact.ogg"],
+          ["Étincelles romantiques", "romantic-sparkle.ogg"],
+        ],
+      };
+
+      const folders = {
+        Musiques: "music",
+        Ambiances: "ambience",
+        Effets: "sfx",
+      };
+      const root = document.querySelector("#tracks");
+
+      for (const [group, tracks] of Object.entries(groups)) {
+        const heading = document.createElement("h2");
+        heading.textContent = group;
+        root.append(heading);
+        const grid = document.createElement("section");
+        grid.className = "grid";
+        for (const [label, file] of tracks) {
+          const card = document.createElement("article");
+          const title = document.createElement("strong");
+          title.textContent = label;
+          const audio = document.createElement("audio");
+          audio.controls = true;
+          audio.preload = "metadata";
+          audio.src = `/assets/game/audio/${folders[group]}/${file}`;
+          audio.addEventListener("play", () => {
+            document.querySelectorAll("audio").forEach((other) => {
+              if (other !== audio) other.pause();
+            });
+          });
+          card.append(title, audio);
+          grid.append(card);
+        }
+        root.append(grid);
+      }
+    </script>
+  </body>
+</html>

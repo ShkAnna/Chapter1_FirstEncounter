@@ -6,7 +6,7 @@ game:
 scenes:
   - id: prologue
     title: "Avant que tout commence"
-    status: scripted
+    status: implemented
     location: "Chambre d'Anna, puis chambre d'Alex"
     mood: "curieux, drôle, légèrement magique"
     player_goal: "Découvrir comment le cours de tir a rendu la première rencontre possible."
@@ -27,7 +27,7 @@ scenes:
 
   - id: first_meeting
     title: "Première Rencontre"
-    status: scripted
+    status: implemented
     location: "Parc près d'Unil Sport, parking, terrain de foot et bord du lac Léman"
     mood: "ensoleillé, vivant, premier contact"
     player_goal: "Guider le groupe depuis le parc jusqu'au bon bus sur le parking."
@@ -48,7 +48,7 @@ scenes:
 
   - id: arrival_vernand
     title: "Arrivée au stand de Vernand"
-    status: scripted
+    status: implemented
     location: "Parking du stand de tir de Vernand, restaurant et entrée du stand"
     mood: "réaliste, animé, début d'aventure"
     player_goal: "Faire descendre le groupe du bus et guider tout le monde jusqu'à l'entrée du stand."
@@ -67,7 +67,7 @@ scenes:
 
   - id: vernand_safety_and_first_shots
     title: "Les premières consignes"
-    status: scripted
+    status: implemented
     location: "Intérieur du stand de Vernand et pas de tir 25 m"
     mood: "concentré, impressionné, premier déclic discret"
     player_goal: "Expliquer les règles, lancer la première série de tir, puis aller voir les élèves."
@@ -91,7 +91,7 @@ scenes:
 
   - id: second_shooting_lesson
     title: "Deuxième cours de tir"
-    status: scripted
+    status: implemented
     location: "Pas de tir 25 m de Vernand"
     mood: "familier, attentif, attirance discrète"
     player_goal: "Observer les élèves pendant la deuxième séance et corriger la posture d'Anna."
@@ -115,7 +115,7 @@ scenes:
 
   - id: final_course_farewell
     title: "Fin du dernier cours"
-    status: scripted
+    status: implemented
     location: "Parking d'Unil Sport"
     mood: "fin de chapitre, occasion à ne pas rater"
     player_goal: "Ranger le bus, ne pas partir trop vite, puis proposer à Anna de la déposer au métro EPFL."
@@ -139,7 +139,7 @@ scenes:
 
   - id: whatsapp_miam_invitation
     title: "Quelques jours plus tard"
-    status: scripted
+    status: implemented
     location: "Conversation WhatsApp"
     mood: "complice, enthousiaste, premier vrai rendez-vous qui se prépare"
     player_goal: "Lire la conversation qui mène à la proposition de se revoir."
@@ -159,7 +159,7 @@ scenes:
 
   - id: polylan_lan_date
     title: "Lendemain à PolyLAN"
-    status: scripted
+    status: implemented
     location: "Ilmac Lausanne / Beaulieu, espace PolyLAN"
     mood: "geek, vivant, cozy, complice"
     player_goal: "Explorer PolyLAN avec Anna, tester les activités, manger au bar et jouer aux deux jeux aux places d'Alex."
@@ -183,7 +183,7 @@ scenes:
 
   - id: chaudron_missed_bus
     title: "Le bus manqué"
-    status: scripted
+    status: implemented
     location: "Arrêt de bus Place de Chauderon, Lausanne"
     mood: "nuit, tendre, drôle, inattendu"
     player_goal: "Vivre la scène de l'arrêt de bus et accompagner Anna vers la gare."
@@ -204,7 +204,7 @@ scenes:
 
   - id: lausanne_station_first_kiss
     title: "Le premier bisou"
-    status: scripted
+    status: implemented
     location: "Gare de Lausanne, quai du train"
     mood: "romantique, nocturne, final"
     player_goal: "Lire la scène finale et le message d'anniversaire."

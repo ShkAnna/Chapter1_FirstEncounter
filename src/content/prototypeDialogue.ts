@@ -5,15 +5,15 @@ export type DialogueLine = {
 
 export const firstMeetingDialogue: DialogueLine[] = [
   {
-    speaker: 'companion',
-    text: 'Tu te souviens de ce moment ?',
+    speaker: 'hero',
+    text: 'Salut ! Enchanté tout le monde, je suis votre moniteur de tir.',
   },
   {
     speaker: 'hero',
-    text: "J'ai l'impression que le lieu me dit quelque chose.",
+    text: "Je suis content de vous voir pour ce module de tir au pistolet.",
   },
   {
-    speaker: 'companion',
-    text: "Alors cherche le petit detail. C'est souvent lui qui raconte tout.",
+    speaker: 'hero',
+    text: "Maintenant, on va aller au parking, où le bus nous attend.",
   },
 ];

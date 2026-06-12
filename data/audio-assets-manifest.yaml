@@ -1,0 +1,104 @@
+version: 1
+
+root: "public/assets/game/audio"
+status: review
+format: "OGG Vorbis, stereo, 22050 Hz"
+origin: "Original procedural drafts generated locally for this project."
+
+scene_audio:
+  - scene: title
+    music: "music/title-night-lake.ogg"
+    ambience: null
+
+  - scene: prologue_anna_room
+    music: "music/prologue-curiosity.ogg"
+    ambience: "ambience/anna-room-day.ogg"
+    sfx:
+      - "sfx/keyboard-typing.ogg"
+      - "sfx/email-sent.ogg"
+      - "sfx/ui-confirm.ogg"
+      - "sfx/ui-cancel.ogg"
+
+  - scene: prologue_alex_room
+    music: "music/title-night-lake.ogg"
+    ambience: "ambience/alex-room-night.ogg"
+    sfx:
+      - "sfx/email-received.ogg"
+      - "sfx/keyboard-typing.ogg"
+      - "sfx/email-sent.ogg"
+
+  - scene: first_meeting
+    music: "music/first-meeting-spring.ogg"
+    ambience: "ambience/unil-park-lake.ogg"
+    sfx:
+      - "sfx/footsteps-stone-loop.ogg"
+      - "sfx/minibus-door.ogg"
+      - "sfx/minibus-engine.ogg"
+
+  - scene: arrival_vernand
+    music: "music/vernand-focused.ogg"
+    ambience: "ambience/vernand-parking.ogg"
+    sfx:
+      - "sfx/footsteps-stone-loop.ogg"
+      - "sfx/minibus-door.ogg"
+      - "sfx/soft-impact.ogg"
+
+  - scene: vernand_briefing
+    music: "music/vernand-focused.ogg"
+    ambience: "ambience/vernand-briefing-room.ogg"
+    sfx:
+      - "sfx/dialogue-next.ogg"
+
+  - scene: vernand_range
+    music: "music/growing-connection.ogg"
+    ambience: "ambience/vernand-shooting-range.ogg"
+    sfx:
+      - "sfx/shooting-22lr-indoor.ogg"
+      - "sfx/soft-impact.ogg"
+
+  - scene: final_course_farewell
+    music: "music/growing-connection.ogg"
+    ambience: "ambience/unil-park-lake.ogg"
+    sfx:
+      - "sfx/phone-low-battery.ogg"
+      - "sfx/minibus-engine.ogg"
+
+  - scene: whatsapp_miam_invitation
+    music: "music/whatsapp-playful.ogg"
+    ambience: null
+    sfx:
+      - "sfx/phone-message.ogg"
+      - "sfx/ui-confirm.ogg"
+
+  - scene: polylan_lan_date
+    music: "music/polylan-cozy-neon.ogg"
+    ambience: "ambience/polylan-hall.ogg"
+    sfx:
+      - "sfx/keyboard-typing.ogg"
+      - "sfx/ui-confirm.ogg"
+
+  - scene: chaudron_missed_bus
+    music: "music/chauderon-tender-night.ogg"
+    ambience: "ambience/chauderon-city-night.ogg"
+    sfx:
+      - "sfx/city-bus-pass.ogg"
+      - "sfx/footsteps-stone-loop.ogg"
+
+  - scene: lausanne_station_first_kiss
+    music: "music/finale-first-kiss.ogg"
+    ambience: "ambience/lausanne-station-platform.ogg"
+    sfx:
+      - "sfx/train-door.ogg"
+      - "sfx/train-departure.ogg"
+      - "sfx/romantic-sparkle.ogg"
+
+global:
+  transitions:
+    music: "music/transition-memory.ogg"
+    sfx: "sfx/memory-unlocked.ogg"
+  dialogue:
+    sfx: "sfx/dialogue-next.ogg"
+  recommended_mix:
+    music_volume: 0.38
+    ambience_volume: 0.22
+    sfx_volume: 0.55

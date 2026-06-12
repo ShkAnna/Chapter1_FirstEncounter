@@ -1,53 +1,53 @@
 # Chapitre 1: Première Rencontre
 
-Jeu narratif top-down inspire par l'energie de Wizard of Legend, mais centre sur une histoire personnelle: la première rencontre, les lieux importants, les petits details et les souvenirs d'un couple.
+Jeu narratif top-down en Phaser qui raconte la première rencontre d'Alex et Anna, des inscriptions au cours de tir jusqu'à leur premier bisou à la gare de Lausanne.
 
-Le joueur controle le personnage de ton copain. Ton personnage est un companion/bot qui le suit, dialogue avec lui et l'aide a debloquer les souvenirs.
+Le joueur contrôle Alex. Anna le suit dans les scènes explorables, dialogue avec lui et participe au déblocage des souvenirs.
 
-## Objectif du prototype
+## Contenu
 
-Construire une premiere version jouable courte, intime et finie:
-
-- un ecran titre avec le nom du jeu;
-- un personnage joueur deplacable au clavier;
-- un personnage companion qui suit le joueur;
-- une premiere scene de rencontre;
-- quelques objets interactifs;
-- un systeme de dialogue et de souvenir debloque.
+- 10 scènes narratives jouables;
+- progression sauvegardée dans le navigateur;
+- déplacements, caméra, collisions et zones accessibles;
+- interactions contextuelles, dialogues et transitions;
+- décors finaux pour UNIL Sport, Vernand, PolyLAN, Chauderon et la gare de Lausanne;
+- prologue, conversation WhatsApp et message final.
 
 ## Structure
 
 ```text
 data/
-  photos/
-    raw/         Photos sources privees, non modifiees.
-    selected/    Photos choisies pour generation d'assets.
-  story/         Donnees narratives modifiables.
-docs/            Notes de conception et plan de production.
-public/assets/   Assets finaux lisibles par le jeu web.
-src/             Code du jeu.
+  photos/          Photos sources privées, jamais chargées par le jeu.
+  story/           Scripts et données narratives.
+  *-manifest.yaml  Suivi des concepts et des assets finaux.
+docs/              Conception et production.
+public/assets/
+  game/            Assets finaux chargés par Phaser.
+  review/          Concepts visuels approuvés.
+  antigrav_test/   Essais externes, exclus du suivi du jeu.
+src/               Code TypeScript du jeu.
 ```
 
-## Direction artistique initiale
-
-Style propose par defaut: 2D top-down chibi / semi-pixel art.
-
-Ce style garde une vibe de jeu d'action-aventure tout en etant assez doux pour une histoire romantique. Les photos serviront de reference pour creer des portraits, sprites, lieux et objets coherents.
-
-## Installation future
-
-Le projet est prevu pour Vite + Phaser + TypeScript.
-
-Quand Node.js/npm seront disponibles sur la machine:
+## Installation
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Donnees a remplir en premier
+Pendant le développement, une scène peut être ouverte directement avec
+`http://127.0.0.1:5173/?scene=arrival_vernand`. Les identifiants disponibles sont listés dans `src/game/progress.ts`. Ce raccourci est désactivé dans le build de production.
 
-1. Ajouter les photos dans `data/photos/raw`.
-2. Completer `data/story/timeline.md`.
-3. Completer `data/story/characters.yaml`.
-4. Completer ou ajuster les scenes dans `data/story/scenes.yaml`.
+Production:
+
+```bash
+npm run build
+npm run preview
+```
+
+## Contrôles
+
+- Flèches directionnelles: déplacer Alex.
+- `E`: interagir avec le point proche.
+- `Espace`: avancer dans les dialogues et transitions.
+- `N` depuis le menu: recommencer depuis le prologue.

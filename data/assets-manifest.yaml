@@ -1,0 +1,283 @@
+version: 1
+
+art_direction:
+  style: "2D top-down chibi / semi-pixel art"
+  camera: "top-down three-quarter view"
+  rendering:
+    - "Readable silhouettes at small game scale."
+    - "Clean pixel clusters with lightly painted texture."
+    - "Warm, romantic colors without a pink color cast over the whole image."
+    - "Consistent outlines, proportions, lighting and shadow direction across assets."
+  privacy:
+    - "Source photos remain under data/photos and are never shipped."
+    - "Only transformed review or final assets may be stored under public/assets."
+
+batches:
+  - id: batch-01-first-meeting
+    label: "Premiere Rencontre - visual direction"
+    status: approved
+    review_folder: "public/assets/review/batch-01-first-meeting"
+    goal: "Validate character likeness, rendering style, camera angle and scene palette before producing animation-ready sprites and tiles."
+    assets:
+      - id: hero_first_meeting_concept
+        type: character_concept_sheet
+        status: approved
+        output: "public/assets/review/batch-01-first-meeting/hero-first-meeting-concept-v1.png"
+        dimensions: "1536x1024"
+        private_references:
+          - "data/photos/raw/people/him/alex_main_full_body_smile_01.jpg"
+          - "data/photos/raw/people/him/alex_main_face_bus_smile_01.jpg"
+        brief:
+          - "Alex, recognizable general likeness, friendly and calm."
+          - "Dark side-parted hair, short beard, rectangular dark glasses."
+          - "White or light t-shirt, dark trousers, light casual jacket available as a variant."
+          - "Front, back, side and three-quarter top-down game views."
+
+      - id: companion_first_meeting_concept
+        type: character_concept_sheet
+        status: approved
+        output: "public/assets/review/batch-01-first-meeting/companion-first-meeting-concept-v1.png"
+        dimensions: "1536x1024"
+        private_references:
+          - "data/photos/raw/people/me/anna_full_body_shooting_range_pamirs_target_table_01.jpg"
+          - "data/photos/raw/people/me/anna_main_portrait_lake_01.jpg"
+        brief:
+          - "Anna, recognizable general likeness, curious and expressive."
+          - "Long straight light-brown hair and soft facial features."
+          - "Light t-shirt, blue jeans, pale zip hoodie, white sneakers."
+          - "Front, back, side and three-quarter top-down game views."
+
+      - id: first_meeting_environment_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v23.png"
+        previous_outputs:
+          - "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v8.png"
+          - "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v10.png"
+          - "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v11.png"
+          - "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v12.png"
+          - "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v13.png"
+          - "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v14.png"
+          - "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v15.png"
+          - "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v22.png"
+        dimensions: "1672x941"
+        private_references:
+          - "data/photos/raw/places/unil_sport_aerial_campus_sports_center_lake_02.JPG"
+          - "data/photos/raw/places/unil_sport_aerial_football_field_lake_parking_05.jpg"
+          - "data/photos/raw/places/unil_sport_precise_map_sos2_park_path_parking_stadium_viewpoint_01.png"
+          - "data/photos/raw/places/unil_sport_sos2_park_autumn_reference_convert_to_spring_benches_path_stadium_01.png"
+          - "data/photos/raw/places/unil_sport_parking_front_from_park_path_football_right_01.png"
+          - "data/photos/raw/places/unil_sport_parking_north_end_exit_to_road_01.png"
+          - "data/photos/raw/places/unil_sport_parking_north_end_exit_to_road_close_02.png"
+          - "data/photos/raw/places/unil_sport_parking_right_view_football_field_lake_01.png"
+          - "data/photos/raw/places/unil_sport_ground_view_football_field_lake_mountains_06.jpg"
+          - "data/photos/raw/objects/vehicles/vw_minibus_white_closed_front_side_01.jpg"
+        brief:
+          - "New environment generated from scratch from the private photo references."
+          - "Coherent moderate elevated perspective shared by the building, parking, road, paths and football field."
+          - "The parking and road remain below the rural horizon."
+          - "The road curves toward the upper-left and follows the wheat-field boundary."
+          - "The football field is rotated 90 degrees counterclockwise relative to version 10."
+          - "The narrow path along the football field's left side is replaced with grass and meadow flowers."
+          - "Additional small rural houses are distributed through the wheat fields."
+          - "Two continuous light-stone pedestrian paths clearly border the long sides of the parking."
+          - "A distinct short asphalt vehicle exit connects the parking directly to the main road."
+          - "The pedestrian paving stops at both sides of the vehicle exit, leaving uninterrupted asphalt through the parking corner."
+          - "Version 16 preserves version 15's layout with version 2's natural daylight, balanced contrast, nuanced palette and richer vegetation rendering."
+          - "Version 17 gives the parking exit a continuous dark-asphalt vehicle-road surface while preserving the rest of version 16."
+          - "Version 18 restores the parking-exit road profile and curb geometry from version 15."
+          - "Version 19 color-matches the parking-exit asphalt to the parking and main road."
+          - "Version 20 removes the mask halo by limiting the color correction to the inner asphalt surface."
+          - "Version 21 removes the remaining dark outline by matching the full vehicle-road surface with an inward-only blend."
+          - "Version 22 globally reconstructs the vehicle exit, both junctions, curbs and nearby landscaping so the road integrates naturally without a visible edited patch."
+          - "Version 23 replaces the enclosure-like shoreline rock row with irregular natural clusters, varied gaps, pebbles, grass and soil transitions."
+          - "Additional rural houses occupy the extreme-left edge of the wheat fields."
+          - "A short, narrow exit continues from the parking's north end and meets the main road directly."
+          - "A continuous landscaped pedestrian path separates the parking from the field."
+          - "Golden wheat fields and forest occupy the left background."
+          - "A few small rural buildings are distributed through the distant wheat fields."
+          - "A wooded transition leads to Lake Geneva and the Alps on the right."
+          - "The circular park remains open and readable for character placement."
+          - "The foreground campus terrace and waterside edge retain coherent perspective."
+          - "Sunny spring atmosphere with green trees, benches and small flowers."
+
+      - id: white_minibus_concept
+        type: object_concept_sheet
+        status: approved
+        output: "public/assets/review/batch-01-first-meeting/white-minibus-concept-v1.png"
+        dimensions: "1536x1024"
+        private_references:
+          - "data/photos/raw/objects/vehicles/vw_minibus_white_closed_front_side_01.jpg"
+          - "data/photos/raw/objects/vehicles/vw_minibus_white_sliding_door_open_front_side_01.jpg"
+        brief:
+          - "Compact white passenger minibus inspired by the reference vehicle."
+          - "Closed and sliding-door-open states."
+          - "Top-down three-quarter views matching the character and environment style."
+
+  - id: batch-02-vernand
+    label: "Vernand - arrival, briefing and shooting range"
+    status: approved
+    review_folder: "public/assets/review/batch-02-vernand"
+    goal: "Establish the reusable environments and props for the arrival at Vernand, the safety briefing and both shooting lessons."
+    assets:
+      - id: vernand_exterior_environment_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-02-vernand/vernand-exterior-environment-concept-v1.png"
+        private_references:
+          - "data/photos/raw/places/vernand_exterior_map_restaurant_stand_parking_layout_01.png"
+          - "data/photos/raw/places/vernand_parking_restaurant_front_stand_right_01.png"
+          - "data/photos/raw/places/vernand_restaurant_outdoor_tables_with_people_01.png"
+          - "data/photos/raw/places/vernand_stand_entrance_door_01.png"
+        brief:
+          - "Playable top-down overview of the parking, restaurant terrace and shooting-range entrance."
+          - "The white minibus arrival point and route to the entrance must be clear."
+          - "Calm Swiss shooting-club atmosphere with a few parked cars and background visitors."
+
+      - id: vernand_briefing_room_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-02-vernand/vernand-briefing-room-concept-v1.png"
+        private_references:
+          - "data/photos/raw/places/vernand_safety_rules_weapons_table_overview_01.jpg"
+          - "data/photos/raw/places/vernand_safety_rules_rifle_pistol_table_01.jpg"
+          - "data/photos/raw/people/him/alex_safety_rules_explaining_weapons_table_01.jpg"
+        brief:
+          - "Interior briefing room with a long wooden table along the north side."
+          - "Alex teaches beside three secured sporting pistols while seven students form a semicircle."
+          - "All characters wear hearing protection; mood is attentive and supervised."
+
+      - id: vernand_25m_range_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-02-vernand/vernand-25m-range-concept-v3.png"
+        dimensions: "1672x940"
+        previous_outputs:
+          - "public/assets/review/batch-02-vernand/vernand-25m-range-concept-v1.png"
+        private_references:
+          - "data/photos/raw/places/vernand_25m_empty_lanes_front_view_01.jpg"
+          - "data/photos/raw/places/vernand_25m_range_group_shooting_anna_second_from_right_01.jpg"
+          - "data/photos/raw/places/vernand_25m_targets_from_shooter_lane_wide_01.jpg"
+        brief:
+          - "Five covered firing lanes with wooden dividers and target rails extending into a green outdoor range."
+          - "All five firing bays have equal width, with each shooter centered on one rail and target."
+          - "Divider panels sit only between adjacent shooters; no panel overlaps a shooter or target axis."
+          - "Readable space behind the shooters for Alex to walk and interact."
+          - "Sporting and instructional context, calm rather than dramatic."
+
+      - id: vernand_props_concept
+        type: object_concept_sheet
+        status: approved
+        output: "public/assets/review/batch-02-vernand/vernand-props-concept-v1.png"
+        private_references:
+          - "data/photos/raw/places/vernand_25m_target_pulled_close_after_shooting_01.jpg"
+          - "data/photos/raw/places/vernand_safety_rules_pistol_handling_01.jpg"
+        brief:
+          - "Game-ready visual direction for black rolling tool case, hearing protectors, paper target and lane divider."
+          - "Include a secured .22 sporting pistol as a small contextual prop."
+          - "Multiple useful states where relevant, with consistent scale and top-down camera."
+
+  - id: batch-03-prologue
+    label: "Prologue - bedrooms and computer interactions"
+    status: approved
+    review_folder: "public/assets/review/batch-03-prologue"
+    goal: "Create Anna's and Alex's bedroom environments plus the computer and email UI direction."
+    assets:
+      - id: anna_room_environment_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-03-prologue/anna-room-environment-concept-v1.png"
+        private_references:
+          - "data/photos/raw/places/anna_room_rectangular_wide_view_01.jpg"
+          - "data/photos/raw/places/anna_room_desk_laptop_day_view_01.jpg"
+        brief:
+          - "Bright compact bedroom with parquet floor, bed, shelves and laptop desk by the window."
+          - "Anna sits at the laptop browsing a simplified university sports website."
+
+      - id: alex_room_environment_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-03-prologue/alex-room-environment-concept-v2.png"
+        dimensions: "1672x941"
+        private_references:
+          - "data/photos/raw/places/alex_room_wide_layout_ultrawide_right_01.jpg"
+          - "data/photos/raw/places/alex_room_desk_ultrawide_right_close_rgb_01.jpg"
+          - "/Users/anna/Downloads/kallax-bloc-porte-en-forme-de-vague-gris-fonce__0977103_pe813400_s5.jpg.avif"
+          - "/Users/anna/Downloads/finally-bought-a-new-detolf-and-also-elevated-them-love-the-v0-8z53ubkg38971.jpg"
+        brief:
+          - "Cozy attic-like computer room with Alex's ultrawide desk on the right and cyan-magenta ambient lights."
+          - "The left wall holds a dark-grey Kallax cabinet with wave-relief doors, manga, books and generic anime-inspired figures."
+          - "A lit glass display section presents the larger collectible figures."
+          - "Alex reads an email, then relaxes to play a game."
+
+  - id: batch-04-polylan
+    label: "PolyLAN - hall, stations and activities"
+    status: approved
+    review_folder: "public/assets/review/batch-04-polylan"
+    goal: "Create the LAN hall, Alex and Anna's decorated PC stations, bar, VR corner and crowd props."
+    assets:
+      - id: polylan_hall_environment_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-04-polylan/polylan-hall-environment-concept-v2.png"
+        dimensions: "1672x941"
+        private_references:
+          - "data/photos/raw/places/polylan_main_hall_rows_tables_players_01.jpg"
+          - "data/photos/raw/places/polylan_bar_queue_and_tables_01.jpg"
+          - "data/photos/raw/places/polylan_stage_competition_chairs_01.jpg"
+        brief:
+          - "Large playable LAN hall with four segmented table rows, bar, VR corner and stage."
+          - "Busy and colorful but navigation routes remain obvious."
+          - "The floor between the bar and entrance remains free of standalone gaming tables."
+
+      - id: polylan_cozy_station_concept
+        type: interaction_concept
+        status: approved
+        output: "public/assets/review/batch-04-polylan/polylan-cozy-station-concept-v4.png"
+        dimensions: "1672x941"
+        private_references:
+          - "data/photos/raw/places/alex_room_desk_ultrawide_right_close_rgb_01.jpg"
+        brief:
+          - "Two reserved adjacent gaming stations for Alex and Anna."
+          - "Pink and cyan lights, fox-inspired decoration, cozy personal objects and two playable screens."
+
+  - id: batch-05-night-finale
+    label: "Chauderon and Lausanne station"
+    status: approved
+    review_folder: "public/assets/review/batch-05-night-finale"
+    goal: "Create the missed-bus scene, station platform and romantic memory illustrations."
+    assets:
+      - id: chauderon_night_environment_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-05-night-finale/chauderon-night-environment-concept-v2.png"
+        dimensions: "1672x941"
+        previous_output: "public/assets/review/batch-05-night-finale/chauderon-night-environment-concept-v1.png"
+        private_references:
+          - "data/photos/raw/places/place_chauderon_bus_stop_day_front_wide_01.png"
+          - "data/photos/raw/places/place_chauderon_bus_stop_night_mood_reference_warm_lights_01.jpg"
+        brief:
+          - "Long Lausanne bus shelter translated from day to a calm blue night."
+          - "Warm lamps and road reflections frame Alex and Anna as a bus passes during their hug."
+
+      - id: lausanne_station_finale_concept
+        type: environment_concept
+        status: approved
+        output: "public/assets/review/batch-05-night-finale/lausanne-station-finale-concept-v2.png"
+        dimensions: "1672x941"
+        previous_output: "public/assets/review/batch-05-night-finale/lausanne-station-finale-concept-v1.png"
+        private_references:
+          - "data/photos/raw/places/lausanne_station_platform_night_train_door_angle_05.png"
+          - "data/photos/raw/people/us/us_posture_kiss_lake_full_body_01.jpg"
+        brief:
+          - "Night platform with silver double-decker train and open red door."
+          - "Alex and Anna share a tender goodbye near the train while background passengers remain subtle."
+
+review_questions:
+  - "Do Alex and Anna feel recognizable enough without becoming realistic portraits?"
+  - "Is the chibi proportion appropriate for a romantic adventure game?"
+  - "Is the top-down camera angle practical for gameplay?"
+  - "Should the final rendering be more pixel-art, more painted, or stay between both?"
+  - "Are the spring palette and environment density correct?"
+  - "Should Anna be brought closer to Alex's less-anime facial treatment?"
+  - "Should the environment become more faithful and sparse, or keep this idealized lakeside composition?"

@@ -1,8 +1,13 @@
 import Phaser from 'phaser';
 import './styles.css';
 import { BootScene } from './scenes/BootScene';
+import { ChapterScene } from './scenes/ChapterScene';
+import { FinaleScene } from './scenes/FinaleScene';
 import { FirstMeetingScene } from './scenes/FirstMeetingScene';
+import { PrologueScene } from './scenes/PrologueScene';
 import { TitleScene } from './scenes/TitleScene';
+import { TransitionScene } from './scenes/TransitionScene';
+import { WhatsAppScene } from './scenes/WhatsAppScene';
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -22,7 +27,16 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [BootScene, TitleScene, FirstMeetingScene],
+  scene: [
+    BootScene,
+    TitleScene,
+    PrologueScene,
+    FirstMeetingScene,
+    ChapterScene,
+    WhatsAppScene,
+    FinaleScene,
+    TransitionScene,
+  ],
 };
 
 new Phaser.Game(config);

@@ -1,0 +1,151 @@
+version: 1
+
+root: "public/assets/game"
+excluded:
+  - "public/assets/antigrav_test"
+
+technical_direction:
+  style: "2D top-down chibi / semi-pixel art"
+  camera: "top-down three-quarter view"
+  environment_size: "1672x941"
+  transparent_assets: true
+
+batches:
+  - id: environments
+    status: final
+    assets:
+      - id: anna_room
+        status: final
+        output: "public/assets/game/environments/prologue/anna-room.png"
+        reference: "public/assets/review/batch-03-prologue/anna-room-environment-concept-v1.png"
+      - id: alex_room
+        status: final
+        output: "public/assets/game/environments/prologue/alex-room-v5.png"
+        previous_outputs:
+          - "public/assets/game/environments/prologue/alex-room.png"
+          - "public/assets/game/environments/prologue/alex-room-v2.png"
+          - "public/assets/game/environments/prologue/alex-room-v3.png"
+          - "public/assets/game/environments/prologue/alex-room-v4.png"
+        reference: "public/assets/review/batch-03-prologue/alex-room-environment-concept-v2.png"
+      - id: unil_sport
+        status: final
+        output: "public/assets/game/environments/unil/unil-sport-v12.png"
+        previous_outputs:
+          - "public/assets/game/environments/unil/unil-sport-v4.png"
+          - "public/assets/game/environments/unil/unil-sport-v11.png"
+        reference: "public/assets/review/batch-01-first-meeting/first-meeting-environment-concept-v23.png"
+      - id: vernand_exterior
+        status: final
+        output: "public/assets/game/environments/vernand/exterior.png"
+        reference: "public/assets/review/batch-02-vernand/vernand-exterior-environment-concept-v1.png"
+      - id: vernand_briefing
+        status: final
+        output: "public/assets/game/environments/vernand/briefing-room.png"
+        reference: "public/assets/review/batch-02-vernand/vernand-briefing-room-concept-v1.png"
+      - id: vernand_range
+        status: final
+        output: "public/assets/game/environments/vernand/range-25m-v7.png"
+        previous_outputs:
+          - "public/assets/game/environments/vernand/range-25m.png"
+          - "public/assets/game/environments/vernand/range-25m-v3.png"
+          - "public/assets/game/environments/vernand/range-25m-v4.png"
+        reference: "public/assets/review/batch-02-vernand/vernand-25m-range-concept-v3.png"
+      - id: polylan_hall
+        status: final
+        output: "public/assets/game/environments/polylan/hall-v2.png"
+        previous_output: "public/assets/game/environments/polylan/hall.png"
+        reference: "public/assets/review/batch-04-polylan/polylan-hall-environment-concept-v2.png"
+      - id: chauderon
+        status: final
+        output: "public/assets/game/environments/night-finale/chauderon-v4.png"
+        previous_outputs:
+          - "public/assets/game/environments/night-finale/chauderon.png"
+          - "public/assets/game/environments/night-finale/chauderon-v2.png"
+          - "public/assets/game/environments/night-finale/chauderon-v3.png"
+        reference: "public/assets/review/batch-05-night-finale/chauderon-night-environment-concept-v2.png"
+      - id: lausanne_station
+        status: final
+        output: "public/assets/game/environments/night-finale/lausanne-station.png"
+        reference: "public/assets/review/batch-05-night-finale/lausanne-station-finale-concept-v2.png"
+
+  - id: characters
+    status: final
+    assets:
+      - id: hero_base_sheet
+        status: final
+        output: "public/assets/game/source-sheets/characters/hero-base.png"
+      - id: companion_base_sheet
+        status: final
+        output: "public/assets/game/source-sheets/characters/companion-base.png"
+      - id: shooting_outfits_sheet
+        status: final
+        output: "public/assets/game/source-sheets/characters/shooting-outfits.png"
+      - id: npc_variants_sheet
+        status: final
+        output: "public/assets/game/source-sheets/characters/npc-variants.png"
+      - id: portraits_sheet
+        status: final
+        output: "public/assets/game/source-sheets/characters/portraits.png"
+      - id: polylan_outfits_sheet
+        status: final
+        output: "public/assets/game/source-sheets/characters/polylan-outfits.png"
+
+  - id: objects
+    status: final
+    assets:
+      - id: minibus_sheet
+        status: final
+        output: "public/assets/game/source-sheets/objects/minibus.png"
+      - id: shooting_props_sheet
+        status: final
+        output: "public/assets/game/source-sheets/objects/shooting-props.png"
+      - id: polylan_props_sheet
+        status: final
+        output: "public/assets/game/source-sheets/objects/polylan-props.png"
+      - id: world_props_sheet
+        status: final
+        output: "public/assets/game/source-sheets/objects/world-props.png"
+      - id: city_bus_large
+        status: final
+        output: "public/assets/game/objects/vehicles/city-bus.png"
+      - id: train_open
+        status: final
+        output: "public/assets/game/objects/vehicles/train-open.png"
+      - id: train_closed
+        status: final
+        output: "public/assets/game/objects/vehicles/train-closed.png"
+
+  - id: ui
+    status: final
+    assets:
+      - id: dialogue_ui
+        status: final
+        output: "public/assets/game/ui/dialogue/dialogue-kit.png"
+      - id: phone_ui
+        status: final
+        output: "public/assets/game/ui/phone/phone-kit.png"
+      - id: memory_ui
+        status: final
+        output: "public/assets/game/ui/memories/memory-kit.png"
+      - id: email_ui
+        status: final
+        output: "public/assets/game/ui/email/email-kit.png"
+      - id: title_background
+        status: final
+        output: "public/assets/game/ui/title/title-background.png"
+
+  - id: narrative
+    status: final
+    assets:
+      - id: alex_whatsapp_avatar
+        status: final
+        output: "public/assets/characters/hero/avatar-whatsapp.png"
+      - id: anna_whatsapp_avatar
+        status: final
+        output: "public/assets/characters/companion/avatar-whatsapp.png"
+      - id: pistol_photos_attachment
+        status: final
+        output: "public/assets/objects/pistol-photos-placeholder.png"
+      - id: anna_program_ideas_attachment
+        status: final
+        output: "public/assets/story/anna-program-ideas-placeholder.png"
