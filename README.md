@@ -47,7 +47,9 @@ npm run preview
 
 ## Contrôles
 
-- Flèches directionnelles: déplacer Alex.
+- Flèches directionnelles, `WASD` ou clic gauche: déplacer Alex.
+- Un clic hors zone est ramené à la frontière accessible la plus proche.
 - `E`: interagir avec le point proche.
 - `Espace`: avancer dans les dialogues et transitions.
+- `L` dans la scène UNIL Sport: afficher ou masquer les zones accessibles.
 - `N` depuis le menu: recommencer depuis le prologue.
