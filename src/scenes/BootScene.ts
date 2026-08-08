@@ -20,8 +20,6 @@ export class BootScene extends Phaser.Scene {
       ['dialogue-box', 'assets/game/ui/dialogue/dialogue-box.png'],
       ['portrait-frame', 'assets/game/ui/dialogue/portrait-frame.png'],
       ['transition-plaque', 'assets/game/ui/memories/transition-plaque.png'],
-      ['received-email', 'assets/game/ui/email/received-email.png'],
-      ['compose-email', 'assets/game/ui/email/compose-email.png'],
       ['phone-frame', 'assets/game/ui/phone/phone-frame.png'],
       ['alex-whatsapp-avatar', 'assets/characters/hero/avatar-whatsapp.png'],
       ['anna-whatsapp-avatar', 'assets/characters/companion/avatar-whatsapp.png'],
