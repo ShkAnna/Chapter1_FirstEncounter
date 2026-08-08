@@ -14,7 +14,8 @@ export class FinaleScene extends Phaser.Scene {
 
   create(): void {
     this.add.image(0, 0, 'lausanne-station').setOrigin(0);
-    this.train = this.add.image(1110, 230, 'train-open').setScale(0.36).setDepth(300);
+    this.cameras.main.setBounds(0, 0, 1672, 941).setScroll(340, 180).setRoundPixels(true);
+    this.train = this.add.image(1110, 250, 'train-open').setScale(0.36).setDepth(300);
     this.hero = this.add.image(790, 535, 'hero-front').setScale(0.105).setDepth(1500);
     this.companion = this.add
       .image(850, 535, 'companion-front')
@@ -37,6 +38,7 @@ export class FinaleScene extends Phaser.Scene {
         backgroundColor: 'rgba(17,17,22,0.78)',
         padding: { x: 12, y: 8 },
       })
+      .setScrollFactor(0)
       .setDepth(8000);
 
     this.dialogue = new DialogueOverlay(this);
@@ -98,7 +100,11 @@ export class FinaleScene extends Phaser.Scene {
   private showFinalMessage(): void {
     completeScene('lausanne_station_first_kiss', ['first_kiss', 'final_anniversary_message']);
     const { width, height } = this.scale;
-    this.add.rectangle(0, 0, width, height, 0x080b13, 0.94).setOrigin(0).setDepth(9000);
+    this.add
+      .rectangle(0, 0, width, height, 0x080b13, 0.94)
+      .setOrigin(0)
+      .setScrollFactor(0)
+      .setDepth(9000);
     this.add
       .text(
         width / 2,
@@ -114,11 +120,13 @@ export class FinaleScene extends Phaser.Scene {
         },
       )
       .setOrigin(0.5, 0)
+      .setScrollFactor(0)
       .setDepth(9100);
     const button = this.add
       .rectangle(width / 2, height - 48, 300, 48, 0x315f65, 0.95)
       .setStrokeStyle(2, 0xf2c14e)
       .setInteractive({ useHandCursor: true })
+      .setScrollFactor(0)
       .setDepth(9200);
     this.add
       .text(width / 2, height - 48, 'Continuer : Chapitre 2', {
@@ -127,6 +135,7 @@ export class FinaleScene extends Phaser.Scene {
         fontStyle: 'bold',
       })
       .setOrigin(0.5)
+      .setScrollFactor(0)
       .setDepth(9300);
     button.on('pointerdown', () => this.showChapterTwoMessage());
   }
@@ -134,6 +143,7 @@ export class FinaleScene extends Phaser.Scene {
   private showChapterTwoMessage(): void {
     const { width, height } = this.scale;
     this.children.removeAll(true);
+    this.cameras.main.setScroll(0, 0).setBounds(0, 0, width, height);
     this.add.rectangle(0, 0, width, height, 0x090b12).setOrigin(0);
     this.add
       .text(width / 2, height / 2, 'Chapitre 2 est en train de se charger.\nAttendez un peu... ❤️', {

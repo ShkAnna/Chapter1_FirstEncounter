@@ -17,7 +17,12 @@ export class PrologueScene extends Phaser.Scene {
 
   private showAnnaRoom(): void {
     this.children.removeAll(true);
-    this.add.image(0, 0, 'anna-room').setOrigin(0);
+    const { width, height } = this.scale;
+    this.add.image(0, 0, 'anna-room').setOrigin(0).setDisplaySize(width, height);
+    this.add
+      .image(322, 316, 'companion-seated-computer')
+      .setScale(0.22)
+      .setDepth(1000);
     this.add
       .text(24, 20, "Chambre d'Anna · Avant la rencontre", {
         color: '#f4efe7',
@@ -62,7 +67,12 @@ export class PrologueScene extends Phaser.Scene {
 
   private showAlexRoom(): void {
     this.children.removeAll(true);
-    this.add.image(0, 0, 'alex-room').setOrigin(0);
+    const { width, height } = this.scale;
+    this.add.image(0, 0, 'alex-room').setOrigin(0).setDisplaySize(width, height);
+    this.add
+      .image(650, 300, 'hero-seated-computer')
+      .setScale(0.2)
+      .setDepth(1000);
     this.add
       .text(24, 20, "Chambre d'Alex · Le même soir", {
         color: '#f4efe7',
@@ -114,7 +124,7 @@ export class PrologueScene extends Phaser.Scene {
     this.clearActionLayer();
     const { width, height } = this.scale;
     const panel = this.add.image(width / 2, height / 2, 'compose-email').setDisplaySize(760, 470);
-    const title = this.add.text(width / 2 - 310, 75, 'Réponse à Anna S.', {
+    const title = this.add.text(width / 2 - 300, 104, 'Réponse à Anna S.', {
       color: '#132231',
       fontSize: '18px',
       fontStyle: 'bold',
@@ -162,7 +172,7 @@ export class PrologueScene extends Phaser.Scene {
     const panel = this.add.image(width / 2, height / 2, 'compose-email').setDisplaySize(760, 470);
     const response = this.add.text(
       width / 2 - 300,
-      105,
+      225,
       "Bonjour Anna,\n\nJe peux vous confirmer qu'il n'y a pas de restrictions particulières pour les ressortissants ukrainiens dans la législation suisse sur les armes. Vous pouvez donc venir au cours sans procédure additionnelle.\n\nAvec mes meilleures salutations,\n\nAlexandre C.",
       {
         color: '#1d2933',
@@ -171,7 +181,7 @@ export class PrologueScene extends Phaser.Scene {
         wordWrap: { width: 600 },
       },
     );
-    const send = this.createButton(width / 2, 445, 'Envoyer', () => this.sendReply());
+    const send = this.createButton(width / 2, 468, 'Envoyer', () => this.sendReply());
     this.actionLayer = this.add.container(0, 0, [panel, response, ...send]).setDepth(7000);
   }
 
@@ -194,8 +204,126 @@ export class PrologueScene extends Phaser.Scene {
 
   private showCenteredAction(label: string, callback: () => void): void {
     this.clearActionLayer();
-    const button = this.createButton(this.scale.width / 2, this.scale.height / 2, label, callback);
-    this.actionLayer = this.add.container(0, 0, button).setDepth(6500);
+    const { width, height } = this.scale;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const panelWidth = 540;
+    const panelHeight = 220;
+    const panelLeft = centerX - panelWidth / 2;
+    const panelTop = centerY - panelHeight / 2;
+
+    const dimmer = this.add
+      .rectangle(0, 0, width, height, 0x111722, 0.28)
+      .setOrigin(0)
+      .setInteractive();
+
+    const windowGraphics = this.add.graphics();
+    windowGraphics.fillStyle(0x0b1020, 0.28);
+    windowGraphics.fillRoundedRect(panelLeft + 8, panelTop + 10, panelWidth, panelHeight, 16);
+    windowGraphics.fillStyle(0xf5f5f7, 1);
+    windowGraphics.fillRoundedRect(panelLeft, panelTop, panelWidth, panelHeight, 16);
+    windowGraphics.fillStyle(0xe6e7eb, 1);
+    windowGraphics.fillRoundedRect(panelLeft, panelTop, panelWidth, 46, 16);
+    windowGraphics.fillRect(panelLeft, panelTop + 24, panelWidth, 22);
+    windowGraphics.lineStyle(1, 0xc8c9ce, 1);
+    windowGraphics.lineBetween(panelLeft, panelTop + 46, panelLeft + panelWidth, panelTop + 46);
+
+    const trafficLights = [
+      { x: panelLeft + 22, color: 0xff5f57 },
+      { x: panelLeft + 44, color: 0xfebc2e },
+      { x: panelLeft + 66, color: 0x28c840 },
+    ];
+    for (const light of trafficLights) {
+      windowGraphics.fillStyle(light.color, 1);
+      windowGraphics.fillCircle(light.x, panelTop + 23, 7);
+    }
+
+    windowGraphics.fillStyle(0x3478f6, 1);
+    windowGraphics.fillCircle(panelLeft + 67, panelTop + 104, 27);
+    windowGraphics.lineStyle(4, 0xffffff, 1);
+    windowGraphics.beginPath();
+    windowGraphics.moveTo(panelLeft + 54, panelTop + 104);
+    windowGraphics.lineTo(panelLeft + 64, panelTop + 114);
+    windowGraphics.lineTo(panelLeft + 82, panelTop + 94);
+    windowGraphics.strokePath();
+
+    const title = this.add
+      .text(centerX, panelTop + 23, 'UNIL Sport', {
+        color: '#34343a',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '15px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    const heading = this.add.text(panelLeft + 112, panelTop + 77, 'Module de tir au pistolet', {
+      color: '#1d1d1f',
+      fontFamily: 'Arial, sans-serif',
+      fontSize: '19px',
+      fontStyle: 'bold',
+    });
+    const description = this.add.text(
+      panelLeft + 112,
+      panelTop + 107,
+      "Envoyer la demande d'inscription pour ce semestre ?",
+      {
+        color: '#5d5d63',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '14px',
+      },
+    );
+
+    const buttonWidth = 292;
+    const buttonHeight = 44;
+    const buttonX = centerX;
+    const buttonY = panelTop + 174;
+    const buttonGraphics = this.add.graphics();
+    const drawButton = (color: number): void => {
+      buttonGraphics.clear();
+      buttonGraphics.fillStyle(color, 1);
+      buttonGraphics.fillRoundedRect(
+        buttonX - buttonWidth / 2,
+        buttonY - buttonHeight / 2,
+        buttonWidth,
+        buttonHeight,
+        10,
+      );
+    };
+    drawButton(0x3478f6);
+
+    const buttonText = this.add
+      .text(buttonX, buttonY, label, {
+        color: '#ffffff',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '15px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    const buttonZone = this.add
+      .zone(buttonX, buttonY, buttonWidth, buttonHeight)
+      .setInteractive({ useHandCursor: true });
+
+    let activated = false;
+    buttonZone.on('pointerover', () => drawButton(0x2868d7));
+    buttonZone.on('pointerout', () => drawButton(0x3478f6));
+    buttonZone.on('pointerdown', () => {
+      if (activated) return;
+      activated = true;
+      this.clearActionLayer();
+      callback();
+    });
+
+    this.actionLayer = this.add
+      .container(0, 0, [
+        dimmer,
+        windowGraphics,
+        title,
+        heading,
+        description,
+        buttonGraphics,
+        buttonText,
+        buttonZone,
+      ])
+      .setDepth(6500);
   }
 
   private createButton(

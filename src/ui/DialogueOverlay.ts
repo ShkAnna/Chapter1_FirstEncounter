@@ -1,9 +1,23 @@
 import Phaser from 'phaser';
 import type { StoryLine } from '../content/chapter';
 
+const PANEL_WIDTH_RATIO = 0.9;
+const PANEL_HEIGHT = 160;
+const PANEL_BOTTOM_MARGIN = 8;
+const PANEL_ART_SCALE = 0.65;
+const PANEL_LEFT_SLICE = 340;
+const PANEL_RIGHT_SLICE = 60;
+const PANEL_TOP_SLICE = 80;
+const PANEL_BOTTOM_SLICE = 44;
+const PANEL_TEXT_LEFT = 130;
+const PANEL_TEXT_RIGHT = 40;
+const PORTRAIT_FRAME_SCALE = 0.255;
+
 export class DialogueOverlay {
   private readonly scene: Phaser.Scene;
   private readonly container: Phaser.GameObjects.Container;
+  private readonly frame: Phaser.GameObjects.NineSlice;
+  private readonly portraitFrame: Phaser.GameObjects.Image;
   private readonly speakerText: Phaser.GameObjects.Text;
   private readonly dialogueText: Phaser.GameObjects.Text;
   private readonly hintText: Phaser.GameObjects.Text;
@@ -17,38 +31,62 @@ export class DialogueOverlay {
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     const { width, height } = scene.scale;
-    const frame = scene.add
-      .image(width / 2, height - 96, 'dialogue-box')
-      .setDisplaySize(width - 48, 176);
-    const portraitFrame = scene.add
-      .image(105, height - 102, 'portrait-frame')
-      .setDisplaySize(132, 132);
+    const panelWidth = width * PANEL_WIDTH_RATIO;
+    const panelHeight = PANEL_HEIGHT;
+    const panelLeft = (width - panelWidth) / 2;
+    const panelTop = height - panelHeight - PANEL_BOTTOM_MARGIN;
+    const portraitCenterX = panelLeft + 65;
+
+    this.frame = scene.add
+      .nineslice(
+        width / 2,
+        panelTop + panelHeight / 2,
+        'dialogue-box',
+        undefined,
+        panelWidth / PANEL_ART_SCALE,
+        panelHeight / PANEL_ART_SCALE,
+        PANEL_LEFT_SLICE,
+        PANEL_RIGHT_SLICE,
+        PANEL_TOP_SLICE,
+        PANEL_BOTTOM_SLICE,
+      )
+      .setScale(PANEL_ART_SCALE);
+    this.portraitFrame = scene.add
+      .image(portraitCenterX, panelTop + panelHeight / 2 + 4, 'portrait-frame')
+      .setScale(PORTRAIT_FRAME_SCALE);
     this.portrait = scene.add
-      .image(105, height - 105, 'hero-portrait')
-      .setDisplaySize(92, 118);
-    this.speakerText = scene.add.text(174, height - 158, '', {
-      color: '#f2c14e',
-      fontSize: '18px',
-      fontStyle: 'bold',
-    });
-    this.dialogueText = scene.add.text(174, height - 128, '', {
+      .image(
+        portraitCenterX,
+        panelTop + panelHeight - 27,
+        'hero-portrait',
+        'dialogue-portrait',
+      )
+      .setOrigin(0.5, 1);
+    this.speakerText = scene.add
+      .text(panelLeft + 198 * PANEL_ART_SCALE, panelTop + 34 * PANEL_ART_SCALE, '', {
+        color: '#f2c14e',
+        fontSize: '16px',
+        fontStyle: 'bold',
+      })
+      .setOrigin(0.5);
+    this.dialogueText = scene.add.text(panelLeft + PANEL_TEXT_LEFT, panelTop + 68, '', {
       color: '#f4efe7',
-      fontSize: '17px',
-      lineSpacing: 5,
-      wordWrap: { width: width - 260 },
+      fontSize: '16px',
+      lineSpacing: 3,
+      wordWrap: { width: panelWidth - PANEL_TEXT_LEFT - PANEL_TEXT_RIGHT },
     });
     this.hintText = scene.add
-      .text(width - 55, height - 37, 'Espace', {
+      .text(panelLeft + panelWidth - 32, panelTop + panelHeight - 17, 'Espace', {
         color: '#aeb7b9',
-        fontSize: '13px',
+        fontSize: '11px',
       })
       .setOrigin(1, 0.5);
 
     this.container = scene.add
       .container(0, 0, [
-        frame,
-        portraitFrame,
+        this.frame,
         this.portrait,
+        this.portraitFrame,
         this.speakerText,
         this.dialogueText,
         this.hintText,
@@ -94,9 +132,27 @@ export class DialogueOverlay {
 
   private renderLine(): void {
     const line = this.lines[this.index];
+    const { width, height } = this.scene.scale;
+    const isNarration = line.speaker === 'Narration';
+
     this.speakerText.setText(line.thought ? `${line.speaker} · pensée` : line.speaker);
-    this.dialogueText.setText(line.text);
     this.hintText.setText(this.index === this.lines.length - 1 ? 'Espace · Fermer' : 'Espace');
+
+    const panelWidth = width * PANEL_WIDTH_RATIO;
+    const panelHeight = PANEL_HEIGHT;
+    const panelLeft = (width - panelWidth) / 2;
+    const panelTop = height - panelHeight - PANEL_BOTTOM_MARGIN;
+    const panelBottom = panelTop + panelHeight;
+    const panelCenterY = panelTop + panelHeight / 2;
+    const textLeftInset = isNarration ? 36 : PANEL_TEXT_LEFT;
+    const textRightInset = PANEL_TEXT_RIGHT;
+    const finalTextWidth = panelWidth - textLeftInset - textRightInset;
+    this.dialogueText.setWordWrapWidth(finalTextWidth).setText(line.text);
+
+    this.frame
+      .setPosition(width / 2, panelCenterY)
+      .setSize(panelWidth / PANEL_ART_SCALE, panelHeight / PANEL_ART_SCALE)
+      .setScale(PANEL_ART_SCALE);
 
     const portraitKey =
       line.portrait === 'companion'
@@ -109,7 +165,28 @@ export class DialogueOverlay {
             ? 'hero-portrait-thoughtful'
             : 'hero-portrait';
 
-    this.portrait.setTexture(portraitKey);
-    this.portrait.setVisible(line.speaker !== 'Narration');
+    this.speakerText.setPosition(
+      panelLeft + 198 * PANEL_ART_SCALE,
+      panelTop + 34 * PANEL_ART_SCALE,
+    );
+
+    this.portrait.setTexture(portraitKey, 'dialogue-portrait');
+    const portraitScale = Math.min(
+      75 / this.portrait.frame.realWidth,
+      94 / this.portrait.frame.realHeight,
+    );
+    const portraitCenterX = panelLeft + 65;
+    this.portrait
+      .setScale(portraitScale)
+      .setPosition(portraitCenterX, panelTop + panelHeight - 27);
+    this.portraitFrame
+      .setScale(PORTRAIT_FRAME_SCALE)
+      .setPosition(portraitCenterX, panelCenterY + 4);
+    this.portrait.setVisible(!isNarration);
+    this.portraitFrame.setVisible(!isNarration);
+    this.dialogueText
+      .setPosition(panelLeft + textLeftInset, panelCenterY - this.dialogueText.height / 2)
+      .setWordWrapWidth(finalTextWidth);
+    this.hintText.setPosition(panelLeft + panelWidth - 32, panelBottom - 17);
   }
 }

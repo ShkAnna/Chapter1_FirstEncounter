@@ -41,6 +41,10 @@ export class BootScene extends Phaser.Scene {
 
     this.load.image('hero-front', 'assets/game/characters/hero/idle-front.png');
     this.load.image('hero-back', 'assets/game/characters/hero/idle-back.png');
+    this.load.image(
+      'hero-seated-computer',
+      'assets/game/characters/hero/seated-computer.png',
+    );
     this.load.image('hero-side', 'assets/game/characters/hero/idle-right.png');
     this.load.image('hero-three-quarter', 'assets/game/characters/hero/idle-left.png');
     this.load.image('hero-portrait', 'assets/game/characters/hero/portrait-neutral.png');
@@ -54,6 +58,10 @@ export class BootScene extends Phaser.Scene {
 
     this.load.image('companion-front', 'assets/game/characters/companion/idle-front.png');
     this.load.image('companion-back', 'assets/game/characters/companion/idle-back.png');
+    this.load.image(
+      'companion-seated-computer',
+      'assets/game/characters/companion/seated-computer.png',
+    );
     this.load.image('companion-side', 'assets/game/characters/companion/idle-right.png');
     this.load.image('companion-three-quarter', 'assets/game/characters/companion/idle-left.png');
     this.load.image(
@@ -85,6 +93,18 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
+    const portraitFrames: Array<[string, number, number, number, number]> = [
+      ['hero-portrait', 51, 59, 333, 410],
+      ['hero-portrait-thoughtful', 0, 65, 336, 404],
+      ['companion-portrait', 67, 13, 317, 396],
+      ['companion-portrait-blush', 29, 17, 355, 392],
+      ['npc-01', 144, 36, 163, 444],
+    ];
+
+    for (const [textureKey, x, y, width, height] of portraitFrames) {
+      this.textures.get(textureKey).add('dialogue-portrait', 0, x, y, width, height);
+    }
+
     this.scene.start('TitleScene');
   }
 }
