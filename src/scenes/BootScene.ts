@@ -161,6 +161,37 @@ export class BootScene extends HighResolutionScene {
         );
       }
     }
+
+    const unilCharacterPoses: Array<[string, string]> = [
+      ['front', 'idle-front'],
+      ['back', 'idle-back'],
+      ['side', 'idle-right'],
+      ['walk-front', 'walk-front'],
+      ['walk-back', 'walk-back'],
+      ['walk-left', 'walk-left'],
+      ['walk-right', 'walk-right'],
+    ];
+    for (const character of ['hero', 'companion']) {
+      for (const [keyPose, filePose] of unilCharacterPoses) {
+        this.load.image(
+          `unil-${character}-${keyPose}`,
+          `assets/game/characters/unil-display/${character}/${filePose}.png`,
+        );
+      }
+    }
+
+    for (const suffix of animatedNpcSuffixes) {
+      this.load.image(
+        `unil-npc-${suffix}`,
+        `assets/game/characters/unil-display/npcs/npc-${suffix}.png`,
+      );
+      for (const pose of npcMovementPoses) {
+        this.load.image(
+          `unil-npc-${suffix}-${pose}`,
+          `assets/game/characters/unil-display/npcs/movement/npc-${suffix}-${pose}.png`,
+        );
+      }
+    }
   }
 
   create(): void {

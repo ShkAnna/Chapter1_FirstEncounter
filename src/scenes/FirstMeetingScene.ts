@@ -63,7 +63,11 @@ type InteractionPoint = {
 
 const WORLD_WIDTH = 1672;
 const WORLD_HEIGHT = 941;
-const CHARACTER_SCALE = 0.12;
+const CHARACTER_SCALE = 1;
+const CHARACTER_BODY_WIDTH = 17;
+const CHARACTER_BODY_HEIGHT = 9;
+const CHARACTER_BODY_OFFSET_X = 14;
+const CHARACTER_BODY_OFFSET_Y = 50;
 const HERO_MOVE_SPEED = 130;
 const COMPANION_MOVE_SPEED = 130;
 const COMPANION_FOLLOW_DISTANCE = 68;
@@ -208,10 +212,10 @@ export class FirstMeetingScene extends HighResolutionScene {
   }
 
   private createCharacters(): void {
-    this.hero = this.physics.add.sprite(735, 690, 'hero-front');
+    this.hero = this.physics.add.sprite(735, 690, 'unil-hero-front');
     this.configureCharacter(this.hero);
 
-    this.companion = this.physics.add.sprite(690, 735, 'companion-front');
+    this.companion = this.physics.add.sprite(690, 735, 'unil-companion-front');
     this.configureCharacter(this.companion);
 
     this.lastHeroPosition.set(this.hero.x, this.hero.y);
@@ -241,18 +245,18 @@ export class FirstMeetingScene extends HighResolutionScene {
     sprite.setScale(CHARACTER_SCALE);
     sprite.setCollideWorldBounds(true);
     const body = sprite.body as Phaser.Physics.Arcade.Body;
-    body.setSize(145, 76);
-    body.setOffset(120, 416);
+    body.setSize(CHARACTER_BODY_WIDTH, CHARACTER_BODY_HEIGHT);
+    body.setOffset(CHARACTER_BODY_OFFSET_X, CHARACTER_BODY_OFFSET_Y);
   }
 
   private createStudents(): void {
     const placements: StudentPlacement[] = [
-      { texture: 'npc-01', x: 675, y: 676 },
-      { texture: 'npc-02', x: 790, y: 658, flipped: true },
-      { texture: 'npc-03', x: 840, y: 691 },
-      { texture: 'npc-04', x: 850, y: 746, flipped: true },
-      { texture: 'npc-06', x: 790, y: 771 },
-      { texture: 'npc-08', x: 725, y: 776, flipped: true },
+      { texture: 'unil-npc-01', x: 675, y: 676 },
+      { texture: 'unil-npc-02', x: 790, y: 658, flipped: true },
+      { texture: 'unil-npc-03', x: 840, y: 691 },
+      { texture: 'unil-npc-04', x: 850, y: 746, flipped: true },
+      { texture: 'unil-npc-06', x: 790, y: 771 },
+      { texture: 'unil-npc-08', x: 725, y: 776, flipped: true },
     ];
 
     this.students = placements.map((placement, index) => {
@@ -560,7 +564,7 @@ export class FirstMeetingScene extends HighResolutionScene {
         lines: [
           {
             speaker: 'hero',
-            text: 'Le terrain était déjà animé. Le campus semblait plein de vie.',
+            text: 'Ça doit être vraiment sympa de jouer ici avec une magnifique vue sur le lac et les montagnes.',
           },
         ],
       },
@@ -572,8 +576,8 @@ export class FirstMeetingScene extends HighResolutionScene {
         label: 'le bord du lac',
         lines: [
           {
-            speaker: 'companion',
-            text: 'Le lac, les montagnes et cette lumière de mai... difficile à oublier.',
+            speaker: 'hero',
+            text: 'La vue est magnifique… mais j’avoue que je regarde surtout Anna ;P',
           },
         ],
       },
@@ -2109,13 +2113,13 @@ export class FirstMeetingScene extends HighResolutionScene {
 
     this.updateCharacterAnimation(
       this.hero,
-      'hero',
+      'unil-hero',
       this.heroFacing,
       0,
     );
     this.updateCharacterAnimation(
       this.companion,
-      'companion',
+      'unil-companion',
       this.companionFacing,
       85,
     );
@@ -2123,7 +2127,7 @@ export class FirstMeetingScene extends HighResolutionScene {
 
   private updateCharacterAnimation(
     sprite: Phaser.Physics.Arcade.Sprite,
-    character: 'hero' | 'companion',
+    character: 'unil-hero' | 'unil-companion',
     facing: FacingDirection,
     phaseOffset: number,
   ): void {
