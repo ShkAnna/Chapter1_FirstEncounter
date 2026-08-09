@@ -86,7 +86,7 @@ export class BootScene extends Phaser.Scene {
     );
     this.load.image(
       'companion-seated-computer',
-      'assets/game/characters/companion/seated-computer.png',
+      'assets/game/characters/companion/seated-computer-v8.png',
     );
     this.load.image('companion-side', 'assets/game/characters/companion/idle-right.png');
     this.load.image('companion-three-quarter', 'assets/game/characters/companion/idle-left.png');
