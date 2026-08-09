@@ -52,6 +52,12 @@ const BUS_DOOR_APPROACH_X = 675;
 const BUS_DOOR_APPROACH_Y = 410;
 const BUS_DOOR_X = 675;
 const BUS_DOOR_Y = 360;
+const BUS_MOVE_SPEED = 96;
+const BUS_NAVIGATION_GRID_SIZE = 16;
+const BUS_WAYPOINT_REACHED_DISTANCE = 6;
+const BUS_EXIT_X = 650;
+const BUS_EXIT_Y = 215;
+const BUS_EXIT_RADIUS = 42;
 
 export class FirstMeetingScene extends Phaser.Scene {
   private cursors?: CursorKeys;
@@ -73,6 +79,13 @@ export class FirstMeetingScene extends Phaser.Scene {
   private walkingStudents = new Set<Phaser.GameObjects.Image>();
   private scriptedWalkingActors = new Set<Phaser.Physics.Arcade.Sprite>();
   private bus?: Phaser.Types.Physics.Arcade.ImageWithStaticBody;
+  private busDrivableZones: Phaser.Geom.Polygon[] = [];
+  private busNavigationPath: Phaser.Math.Vector2[] = [];
+  private busDrivingActive = false;
+  private busExitTriggered = false;
+  private busVerticalDirection: -1 | 1 = 1;
+  private busDirectionOverlay?: Phaser.GameObjects.Image;
+  private busExitMarker?: Phaser.GameObjects.Container;
   private blockers?: Phaser.Physics.Arcade.StaticGroup;
   private navigationBlockers: Phaser.Geom.Rectangle[] = [];
   private walkableZones: Phaser.Geom.Polygon[] = [];
@@ -126,7 +139,7 @@ export class FirstMeetingScene extends Phaser.Scene {
     this.startDialogue(firstMeetingDialogue);
   }
 
-  update(): void {
+  update(_time: number, delta: number): void {
     if (!this.hero || !this.companion || !this.cursors) {
       return;
     }
@@ -134,7 +147,11 @@ export class FirstMeetingScene extends Phaser.Scene {
     this.restoreToWalkableArea(this.hero, this.lastHeroPosition);
     this.restoreToWalkableArea(this.companion, this.lastCompanionPosition);
 
-    if (this.dialogueOpen || this.busSequenceActive) {
+    if (this.busDrivingActive) {
+      this.hero.setVelocity(0, 0);
+      this.companion.setVelocity(0, 0);
+      this.updateBusDriving(delta);
+    } else if (this.dialogueOpen || this.busSequenceActive) {
       this.hero.setVelocity(0, 0);
       this.companion.setVelocity(0, 0);
     } else {
@@ -246,6 +263,16 @@ export class FirstMeetingScene extends Phaser.Scene {
       this.polygon([1260, 700, 1395, 720, 1460, 815, 1390, 855, 1300, 790]),
     ];
 
+    this.busDrivableZones = [
+      // Parking surface, inset so the minibus remains clear of kerbs and vegetation.
+      this.polygon([300, 315, 385, 230, 610, 195, 790, 260, 820, 325, 625, 405, 345, 375]),
+      // Parking exit and the curved junction with the road.
+      this.polygon([575, 205, 630, 165, 695, 185, 735, 270, 665, 315, 600, 255]),
+      // Main road running above the parking area.
+      this.polygon([0, 315, 555, 140, 615, 185, 20, 390]),
+      this.polygon([540, 125, 615, 95, 680, 160, 685, 220, 630, 245, 585, 190]),
+    ];
+
     this.blockers = this.physics.add.staticGroup();
     this.addBlocker(0, 330, 425, 270);
     this.addBlocker(790, 340, 535, 285);
@@ -258,6 +285,13 @@ export class FirstMeetingScene extends Phaser.Scene {
       this.debugGraphics.fillPoints(zone.points, true);
       this.debugGraphics.strokePoints(zone.points, true);
     }
+    this.debugGraphics.lineStyle(2, 0xf2c14e, 0.95);
+    this.debugGraphics.fillStyle(0xf2c14e, 0.13);
+    for (const zone of this.busDrivableZones) {
+      this.debugGraphics.fillPoints(zone.points, true);
+      this.debugGraphics.strokePoints(zone.points, true);
+    }
+    this.debugGraphics.strokeCircle(BUS_EXIT_X, BUS_EXIT_Y, BUS_EXIT_RADIUS);
 
     this.navigationTargetMarker = this.add
       .circle(0, 0, 11, 0x4ea4ef, 0.16)
@@ -509,16 +543,20 @@ export class FirstMeetingScene extends Phaser.Scene {
     });
 
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (
-        pointer.button !== 0 ||
-        this.dialogueOpen ||
-        this.busSequenceActive ||
-        !this.hero
-      ) {
+      if (pointer.button !== 0 || this.dialogueOpen) {
         return;
       }
 
       const target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+      if (this.busDrivingActive) {
+        this.setBusNavigationTarget(target);
+        return;
+      }
+
+      if (this.busSequenceActive || !this.hero) {
+        return;
+      }
+
       if (!this.isNavigationWalkable(target.x, target.y)) {
         return;
       }
@@ -602,6 +640,331 @@ export class FirstMeetingScene extends Phaser.Scene {
   private clearNavigationPath(): void {
     this.navigationPath = [];
     this.navigationTargetMarker?.setVisible(false);
+  }
+
+  private setBusNavigationTarget(target: Phaser.Math.Vector2): void {
+    if (!this.bus || !this.isBusPositionDrivable(target.x, target.y)) {
+      this.clearBusNavigationPath();
+      return;
+    }
+
+    const start = new Phaser.Math.Vector2(this.bus.x, this.bus.y);
+    const path = this.findBusNavigationPath(start, target);
+    if (path.length === 0) {
+      this.clearBusNavigationPath();
+      return;
+    }
+
+    this.busNavigationPath = path;
+    const finalWaypoint = path.at(-1)!;
+    this.navigationTargetMarker
+      ?.setPosition(finalWaypoint.x, finalWaypoint.y)
+      .setVisible(true);
+  }
+
+  private updateBusDriving(delta: number): void {
+    if (!this.bus || !this.cursors) {
+      return;
+    }
+
+    const inputDirection = new Phaser.Math.Vector2();
+    if (this.cursors.left.isDown || this.wasdKeys?.left.isDown) inputDirection.x -= 1;
+    if (this.cursors.right.isDown || this.wasdKeys?.right.isDown) inputDirection.x += 1;
+    if (this.cursors.up.isDown || this.wasdKeys?.up.isDown) inputDirection.y -= 1;
+    if (this.cursors.down.isDown || this.wasdKeys?.down.isDown) inputDirection.y += 1;
+
+    let direction: Phaser.Math.Vector2 | undefined;
+    let maxDistance = (BUS_MOVE_SPEED * Math.min(delta, 40)) / 1000;
+
+    if (inputDirection.lengthSq() > 0) {
+      this.clearBusNavigationPath();
+      direction = inputDirection.normalize();
+    } else {
+      while (
+        this.busNavigationPath.length > 0 &&
+        Phaser.Math.Distance.Between(
+          this.bus.x,
+          this.bus.y,
+          this.busNavigationPath[0].x,
+          this.busNavigationPath[0].y,
+        ) <= BUS_WAYPOINT_REACHED_DISTANCE
+      ) {
+        this.busNavigationPath.shift();
+      }
+
+      const waypoint = this.busNavigationPath[0];
+      if (waypoint) {
+        const offset = waypoint.clone().subtract(new Phaser.Math.Vector2(this.bus.x, this.bus.y));
+        maxDistance = Math.min(maxDistance, offset.length());
+        direction = offset.normalize();
+      } else {
+        this.navigationTargetMarker?.setVisible(false);
+      }
+    }
+
+    if (!direction || maxDistance <= 0) {
+      return;
+    }
+
+    const movement = this.moveBusWithinDrivableArea(direction, maxDistance);
+    if (movement.lengthSq() === 0) {
+      if (inputDirection.lengthSq() === 0) {
+        this.clearBusNavigationPath();
+      }
+      return;
+    }
+
+    this.updateBusDirection(movement);
+    this.updateBusPerspectiveScale();
+
+    if (
+      !this.busExitTriggered &&
+      Phaser.Math.Distance.Between(this.bus.x, this.bus.y, BUS_EXIT_X, BUS_EXIT_Y) <=
+        BUS_EXIT_RADIUS
+    ) {
+      void this.completeBusDeparture();
+    }
+  }
+
+  private moveBusWithinDrivableArea(
+    direction: Phaser.Math.Vector2,
+    distance: number,
+  ): Phaser.Math.Vector2 {
+    if (!this.bus) {
+      return new Phaser.Math.Vector2();
+    }
+
+    const startX = this.bus.x;
+    const startY = this.bus.y;
+    const offsetX = direction.x * distance;
+    const offsetY = direction.y * distance;
+    const targetX = startX + offsetX;
+    const targetY = startY + offsetY;
+
+    if (this.isBusPositionDrivable(targetX, targetY)) {
+      this.bus.setPosition(targetX, targetY);
+    } else {
+      if (this.isBusPositionDrivable(targetX, startY)) {
+        this.bus.x = targetX;
+      }
+      if (this.isBusPositionDrivable(this.bus.x, targetY)) {
+        this.bus.y = targetY;
+      }
+    }
+
+    return new Phaser.Math.Vector2(this.bus.x - startX, this.bus.y - startY);
+  }
+
+  private clearBusNavigationPath(): void {
+    this.busNavigationPath = [];
+    this.navigationTargetMarker?.setVisible(false);
+  }
+
+  private isBusPositionDrivable(x: number, y: number): boolean {
+    const scale = this.busScaleForY(y);
+    const halfWidth = 120 * scale;
+    const halfHeight = 70 * scale;
+    const samplePoints = [
+      [x, y],
+      [x - halfWidth, y],
+      [x + halfWidth, y],
+      [x, y - halfHeight],
+      [x, y + halfHeight],
+    ];
+
+    return samplePoints.every(([sampleX, sampleY]) =>
+      this.busDrivableZones.some((zone) =>
+        Phaser.Geom.Polygon.Contains(zone, sampleX, sampleY),
+      ),
+    );
+  }
+
+  private isBusSegmentDrivable(
+    start: Phaser.Math.Vector2,
+    end: Phaser.Math.Vector2,
+  ): boolean {
+    const distance = start.distance(end);
+    const steps = Math.max(1, Math.ceil(distance / (BUS_NAVIGATION_GRID_SIZE / 3)));
+    for (let step = 0; step <= steps; step += 1) {
+      const x = Phaser.Math.Linear(start.x, end.x, step / steps);
+      const y = Phaser.Math.Linear(start.y, end.y, step / steps);
+      if (!this.isBusPositionDrivable(x, y)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private findBusNavigationPath(
+    start: Phaser.Math.Vector2,
+    target: Phaser.Math.Vector2,
+  ): Phaser.Math.Vector2[] {
+    if (this.isBusSegmentDrivable(start, target)) {
+      return [target];
+    }
+
+    const minX = 0;
+    const minY = 80;
+    const maxX = 840;
+    const maxY = 430;
+    const columns = Math.ceil((maxX - minX) / BUS_NAVIGATION_GRID_SIZE);
+    const rows = Math.ceil((maxY - minY) / BUS_NAVIGATION_GRID_SIZE);
+    const nodeCount = columns * rows;
+    const nodeState = new Int8Array(nodeCount);
+    const nodePoint = (index: number): Phaser.Math.Vector2 => {
+      const column = index % columns;
+      const row = Math.floor(index / columns);
+      return new Phaser.Math.Vector2(
+        minX + column * BUS_NAVIGATION_GRID_SIZE + BUS_NAVIGATION_GRID_SIZE / 2,
+        minY + row * BUS_NAVIGATION_GRID_SIZE + BUS_NAVIGATION_GRID_SIZE / 2,
+      );
+    };
+    const isNodeDrivable = (index: number): boolean => {
+      if (nodeState[index] !== 0) return nodeState[index] === 1;
+      const point = nodePoint(index);
+      const drivable = this.isBusPositionDrivable(point.x, point.y);
+      nodeState[index] = drivable ? 1 : -1;
+      return drivable;
+    };
+    const closestNode = (point: Phaser.Math.Vector2): number => {
+      let closest = -1;
+      let closestDistanceSq = Number.POSITIVE_INFINITY;
+      for (let index = 0; index < nodeCount; index += 1) {
+        if (!isNodeDrivable(index)) continue;
+        const candidate = nodePoint(index);
+        if (!this.isBusSegmentDrivable(point, candidate)) continue;
+        const distanceSq = Phaser.Math.Distance.Squared(
+          point.x,
+          point.y,
+          candidate.x,
+          candidate.y,
+        );
+        if (distanceSq < closestDistanceSq) {
+          closest = index;
+          closestDistanceSq = distanceSq;
+        }
+      }
+      return closest;
+    };
+
+    const startNode = closestNode(start);
+    const targetNode = closestNode(target);
+    if (startNode < 0 || targetNode < 0) {
+      return [];
+    }
+
+    const gScore = new Float64Array(nodeCount);
+    const fScore = new Float64Array(nodeCount);
+    gScore.fill(Number.POSITIVE_INFINITY);
+    fScore.fill(Number.POSITIVE_INFINITY);
+    const cameFrom = new Int32Array(nodeCount);
+    cameFrom.fill(-1);
+    const openNodes = [startNode];
+    const openState = new Uint8Array(nodeCount);
+    const closedState = new Uint8Array(nodeCount);
+    const heuristic = (index: number): number => nodePoint(index).distance(target);
+    gScore[startNode] = 0;
+    fScore[startNode] = heuristic(startNode) / BUS_NAVIGATION_GRID_SIZE;
+    openState[startNode] = 1;
+    const neighbors = [
+      [-1, 0],
+      [1, 0],
+      [0, -1],
+      [0, 1],
+      [-1, -1],
+      [1, -1],
+      [-1, 1],
+      [1, 1],
+    ];
+    let reachedTarget = false;
+
+    while (openNodes.length > 0) {
+      let bestOpenIndex = 0;
+      for (let index = 1; index < openNodes.length; index += 1) {
+        if (fScore[openNodes[index]] < fScore[openNodes[bestOpenIndex]]) {
+          bestOpenIndex = index;
+        }
+      }
+
+      const current = openNodes.splice(bestOpenIndex, 1)[0];
+      openState[current] = 0;
+      if (closedState[current]) continue;
+      closedState[current] = 1;
+      if (current === targetNode) {
+        reachedTarget = true;
+        break;
+      }
+
+      const currentColumn = current % columns;
+      const currentRow = Math.floor(current / columns);
+      for (const [columnOffset, rowOffset] of neighbors) {
+        const nextColumn = currentColumn + columnOffset;
+        const nextRow = currentRow + rowOffset;
+        if (
+          nextColumn < 0 ||
+          nextColumn >= columns ||
+          nextRow < 0 ||
+          nextRow >= rows
+        ) {
+          continue;
+        }
+
+        const next = nextRow * columns + nextColumn;
+        if (closedState[next] || !isNodeDrivable(next)) continue;
+        if (columnOffset !== 0 && rowOffset !== 0) {
+          const horizontal = currentRow * columns + nextColumn;
+          const vertical = nextRow * columns + currentColumn;
+          if (!isNodeDrivable(horizontal) || !isNodeDrivable(vertical)) continue;
+        }
+
+        const movementCost =
+          columnOffset !== 0 && rowOffset !== 0 ? Math.SQRT2 : 1;
+        const tentativeScore = gScore[current] + movementCost;
+        if (tentativeScore >= gScore[next]) continue;
+        cameFrom[next] = current;
+        gScore[next] = tentativeScore;
+        fScore[next] = tentativeScore + heuristic(next) / BUS_NAVIGATION_GRID_SIZE;
+        if (!openState[next]) {
+          openState[next] = 1;
+          openNodes.push(next);
+        }
+      }
+    }
+
+    if (!reachedTarget) {
+      return [];
+    }
+
+    const gridPath: Phaser.Math.Vector2[] = [];
+    let current = targetNode;
+    while (current >= 0) {
+      gridPath.unshift(nodePoint(current));
+      if (current === startNode) break;
+      current = cameFrom[current];
+    }
+    if (current !== startNode) {
+      return [];
+    }
+
+    const rawPath = [start, ...gridPath];
+    if (this.isBusSegmentDrivable(gridPath.at(-1)!, target)) {
+      rawPath.push(target);
+    }
+
+    const smoothed = [rawPath[0]];
+    let anchor = 0;
+    while (anchor < rawPath.length - 1) {
+      let next = rawPath.length - 1;
+      while (
+        next > anchor + 1 &&
+        !this.isBusSegmentDrivable(rawPath[anchor], rawPath[next])
+      ) {
+        next -= 1;
+      }
+      smoothed.push(rawPath[next]);
+      anchor = next;
+    }
+    return smoothed.slice(1);
   }
 
   private findNavigationPath(
@@ -1004,9 +1367,9 @@ export class FirstMeetingScene extends Phaser.Scene {
     }
 
     await this.transitionBusTexture('minibus-closed', 480);
-    this.objectiveText?.setText('Tout le monde est installé. Départ !');
+    this.objectiveText?.setText('Tout le monde est installé. Prenez le volant !');
     await this.waitFor(450);
-    await this.departBus();
+    this.enableBusDriving();
   }
 
   private async boardActor(
@@ -1042,7 +1405,7 @@ export class FirstMeetingScene extends Phaser.Scene {
     });
   }
 
-  private async departBus(): Promise<void> {
+  private enableBusDriving(): void {
     if (!this.bus) {
       return;
     }
@@ -1050,17 +1413,57 @@ export class FirstMeetingScene extends Phaser.Scene {
     this.cameras.main.stopFollow();
     this.cameras.main.startFollow(this.bus, true, 0.08, 0.08);
     this.bus.setDepth(2600);
+    this.busDrivingActive = true;
+    this.busExitTriggered = false;
+    this.clearBusNavigationPath();
+    this.objectiveText?.setText(
+      'Objectif : conduisez le minibus vers la sortie en haut à droite du parking',
+    );
+    this.createBusExitMarker();
+  }
 
-    await Promise.all([
-      this.transitionBusTexture('minibus-rear', 320),
-      this.tweenBusTo(665, 270, 0.19, 850, 'Sine.inOut'),
-    ]);
-    await this.tweenBusTo(650, 215, 0.175, 750, 'Linear');
-    await Promise.all([
-      this.transitionBusTexture('minibus-rear-left', 320),
-      this.tweenBusTo(585, 160, 0.15, 1050, 'Sine.inOut'),
-    ]);
-    await this.tweenBusTo(505, 115, 0.125, 1100, 'Sine.in');
+  private createBusExitMarker(): void {
+    this.busExitMarker?.destroy();
+    const glow = this.add.circle(0, 0, BUS_EXIT_RADIUS, 0xf2c14e, 0.1);
+    const ring = this.add
+      .circle(0, 0, BUS_EXIT_RADIUS - 5, 0xf2c14e, 0.04)
+      .setStrokeStyle(3, 0xf8dc82, 0.9);
+    const label = this.add
+      .text(0, BUS_EXIT_RADIUS + 9, 'SORTIE', {
+        color: '#fff3bf',
+        fontSize: '13px',
+        fontStyle: 'bold',
+        backgroundColor: 'rgba(17, 17, 22, 0.78)',
+        padding: { x: 7, y: 4 },
+      })
+      .setOrigin(0.5, 0);
+    this.busExitMarker = this.add
+      .container(BUS_EXIT_X, BUS_EXIT_Y, [glow, ring, label])
+      .setDepth(2300);
+    this.tweens.add({
+      targets: [glow, ring],
+      alpha: 0.45,
+      duration: 850,
+      ease: 'Sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
+  }
+
+  private async completeBusDeparture(): Promise<void> {
+    if (!this.bus || this.busExitTriggered) {
+      return;
+    }
+
+    this.busExitTriggered = true;
+    this.busDrivingActive = false;
+    this.clearBusNavigationPath();
+    this.busExitMarker?.destroy();
+    this.busExitMarker = undefined;
+    this.interactionPrompt?.setVisible(false);
+    this.objectiveText?.setText('Le minibus rejoint la route. Départ pour Vernand...');
+
+    await this.waitFor(220);
     this.cameras.main.fadeOut(650, 6, 10, 18);
     await this.waitFor(650);
 
@@ -1212,29 +1615,81 @@ export class FirstMeetingScene extends Phaser.Scene {
     return direction.y < 0 ? 'back' : 'front';
   }
 
-  private tweenBusTo(
-    x: number,
-    y: number,
-    scale: number,
-    duration: number,
-    ease: string,
-  ): Promise<void> {
-    if (!this.bus) {
-      return Promise.resolve();
+  private updateBusDirection(direction: Phaser.Math.Vector2): void {
+    if (!this.bus || direction.lengthSq() === 0) {
+      return;
     }
 
-    return new Promise((resolve) => {
-      this.tweens.add({
-        targets: this.bus,
-        x,
-        y,
-        scaleX: scale,
-        scaleY: scale,
-        duration,
-        ease,
-        onComplete: () => resolve(),
-      });
+    const normalized = direction.clone().normalize();
+    if (Math.abs(normalized.y) > 0.2) {
+      this.busVerticalDirection = normalized.y < 0 ? -1 : 1;
+    }
+
+    const horizontal = Math.abs(normalized.x);
+    const movingAlmostStraightUp = normalized.y < 0 && horizontal < 0.38;
+    const movingTowardTop =
+      normalized.y < -0.2 ||
+      (Math.abs(normalized.y) <= 0.2 && this.busVerticalDirection < 0);
+    let texture = 'minibus-closed';
+    let flipX = this.bus.flipX;
+
+    if (movingAlmostStraightUp) {
+      texture = 'minibus-rear';
+      flipX = false;
+    } else if (movingTowardTop) {
+      texture = 'minibus-rear-left';
+      if (horizontal > 0.08) flipX = normalized.x > 0;
+    } else {
+      texture = 'minibus-closed';
+      if (horizontal > 0.08) flipX = normalized.x > 0;
+    }
+
+    if (this.bus.texture.key === texture && this.bus.flipX === flipX) {
+      return;
+    }
+
+    this.busDirectionOverlay?.destroy();
+    const oldTexture = this.bus.texture.key;
+    const oldFlipX = this.bus.flipX;
+    this.bus.setTexture(texture).setFlipX(flipX);
+    const overlay = this.add
+      .image(this.bus.x, this.bus.y, oldTexture)
+      .setOrigin(this.bus.originX, this.bus.originY)
+      .setScale(this.bus.scaleX, this.bus.scaleY)
+      .setFlipX(oldFlipX)
+      .setDepth(this.bus.depth + 1);
+    this.busDirectionOverlay = overlay;
+    this.tweens.add({
+      targets: overlay,
+      alpha: 0,
+      duration: 140,
+      ease: 'Sine.out',
+      onUpdate: () => {
+        if (!this.bus || overlay !== this.busDirectionOverlay) return;
+        overlay
+          .setPosition(this.bus.x, this.bus.y)
+          .setScale(this.bus.scaleX, this.bus.scaleY)
+          .setDepth(this.bus.depth + 1);
+      },
+      onComplete: () => {
+        overlay.destroy();
+        if (this.busDirectionOverlay === overlay) {
+          this.busDirectionOverlay = undefined;
+        }
+      },
     });
+  }
+
+  private updateBusPerspectiveScale(): void {
+    if (!this.bus) {
+      return;
+    }
+    const scale = this.busScaleForY(this.bus.y);
+    this.bus.setScale(scale);
+  }
+
+  private busScaleForY(y: number): number {
+    return Phaser.Math.Clamp(0.125 + (y - 115) * 0.00045, 0.12, 0.21);
   }
 
   private transitionBusTexture(texture: string, duration: number): Promise<void> {
@@ -1409,6 +1864,14 @@ export class FirstMeetingScene extends Phaser.Scene {
 
   private updateNearbyInteraction(): void {
     if (!this.hero) {
+      return;
+    }
+
+    if (this.busDrivingActive) {
+      this.nearbyInteraction = undefined;
+      this.interactionPrompt
+        ?.setText('WASD / flèches ou clic gauche · Conduire vers la sortie')
+        .setVisible(true);
       return;
     }
 

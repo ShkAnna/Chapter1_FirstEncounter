@@ -48,7 +48,9 @@ npm run preview
 ## Contrôles
 
 - Flèches directionnelles, `WASD` ou clic gauche: déplacer Alex.
-- Un clic hors zone est ramené à la frontière accessible la plus proche.
+- Un clic hors zone accessible est ignoré.
+- Après l'embarquement à UNIL Sport, les mêmes contrôles conduisent le minibus
+  uniquement sur le parking et la route.
 - `E`: interagir avec le point proche.
 - `Espace`: avancer dans les dialogues et transitions.
 - `L` dans la scène UNIL Sport: afficher ou masquer les zones accessibles.
