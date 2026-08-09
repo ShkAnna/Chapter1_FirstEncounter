@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
+import { HighResolutionScene } from './HighResolutionScene';
 
-export class BootScene extends Phaser.Scene {
+export class BootScene extends HighResolutionScene {
   constructor() {
     super('BootScene');
   }
@@ -39,6 +40,7 @@ export class BootScene extends Phaser.Scene {
       ['train-open', 'assets/game/objects/vehicles/train-open.png'],
       ['train-closed', 'assets/game/objects/vehicles/train-closed.png'],
       ['case-closed', 'assets/game/objects/shooting/case-closed.png'],
+      ['football', 'assets/game/objects/world/football.png'],
       ['phone-low-battery', 'assets/game/objects/world/phone-low-battery.png'],
       ['hearts', 'assets/game/objects/world/hearts.png'],
     ];
@@ -92,7 +94,7 @@ export class BootScene extends Phaser.Scene {
     this.load.image('companion-three-quarter', 'assets/game/characters/companion/idle-left.png');
     this.load.image(
       'companion-portrait',
-      'assets/game/characters/companion/portrait-neutral.png',
+      'assets/game/characters/companion/portrait-neutral-v3.png',
     );
     this.load.image(
       'companion-portrait-blush',
@@ -115,6 +117,32 @@ export class BootScene extends Phaser.Scene {
     for (let index = 1; index <= 8; index += 1) {
       const suffix = String(index).padStart(2, '0');
       this.load.image(`npc-${suffix}`, `assets/game/characters/npcs/npc-${suffix}.png`);
+    }
+
+    const footballFieldPlayers = [
+      'red-07',
+      'red-09',
+      'red-11',
+      'white-06',
+      'white-08',
+      'white-10',
+    ];
+    for (const player of footballFieldPlayers) {
+      for (const pose of ['idle', 'walk', 'kick']) {
+        this.load.image(
+          `football-${player}-${pose}`,
+          `assets/game/characters/football/poses-display/${player}-${pose}.png`,
+        );
+      }
+    }
+
+    for (const team of ['red', 'white']) {
+      for (const pose of ['idle', 'walk', 'block']) {
+        this.load.image(
+          `football-${team}-goalkeeper-01-${pose}`,
+          `assets/game/characters/football/poses-display/${team}-goalkeeper-01-${pose}.png`,
+        );
+      }
     }
 
     const animatedNpcSuffixes = ['01', '02', '03', '04', '06', '08'];
@@ -145,7 +173,9 @@ export class BootScene extends Phaser.Scene {
     ];
 
     for (const [textureKey, x, y, width, height] of portraitFrames) {
-      this.textures.get(textureKey).add('dialogue-portrait', 0, x, y, width, height);
+      const portraitTexture = this.textures.get(textureKey);
+      portraitTexture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+      portraitTexture.add('dialogue-portrait', 0, x, y, width, height);
     }
 
     this.scene.start('TitleScene');

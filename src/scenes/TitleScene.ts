@@ -7,8 +7,9 @@ import {
   STORY_SCENES,
   type StorySceneId,
 } from '../game/progress';
+import { HighResolutionScene } from './HighResolutionScene';
 
-export class TitleScene extends Phaser.Scene {
+export class TitleScene extends HighResolutionScene {
   constructor() {
     super('TitleScene');
   }

@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 import { completeScene, resetSave } from '../game/progress';
 import { DialogueOverlay } from '../ui/DialogueOverlay';
+import { HighResolutionScene } from './HighResolutionScene';
 
-export class FinaleScene extends Phaser.Scene {
+export class FinaleScene extends HighResolutionScene {
   private hero?: Phaser.GameObjects.Image;
   private companion?: Phaser.GameObjects.Image;
   private train?: Phaser.GameObjects.Image;

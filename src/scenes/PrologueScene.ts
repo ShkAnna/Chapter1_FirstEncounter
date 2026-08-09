@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 import { finishWithTransition } from '../game/progress';
 import { DialogueOverlay } from '../ui/DialogueOverlay';
+import { HighResolutionScene } from './HighResolutionScene';
 
-export class PrologueScene extends Phaser.Scene {
+export class PrologueScene extends HighResolutionScene {
   private dialogue?: DialogueOverlay;
   private actionLayer?: Phaser.GameObjects.Container;
   private refused = false;

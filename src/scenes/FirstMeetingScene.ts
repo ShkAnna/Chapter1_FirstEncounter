@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { firstMeetingDialogue } from '../content/prototypeDialogue';
 import type { DialogueLine } from '../content/prototypeDialogue';
 import { finishWithTransition } from '../game/progress';
+import { HighResolutionScene } from './HighResolutionScene';
 
 type CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 
@@ -21,6 +22,33 @@ type StudentPlacement = {
   flipped?: boolean;
 };
 
+type FootballTeam = 'red' | 'white';
+type FootballRole = 'field' | 'goalkeeper';
+
+type FootballPlayer = {
+  sprite: Phaser.GameObjects.Image;
+  idleTexture: string;
+  walkTexture: string;
+  actionTexture: string;
+  team: FootballTeam;
+  role: FootballRole;
+  waypoints: Phaser.Math.Vector2[];
+  waypointIndex: number;
+  speed: number;
+  phaseOffset: number;
+  actionUntil: number;
+};
+
+type FootballPass = {
+  receiverIndex: number;
+  startX: number;
+  startY: number;
+  elapsed: number;
+  duration: number;
+  shot: boolean;
+  goalkeeperActionTriggered: boolean;
+};
+
 type InteractionPoint = {
   id: string;
   x: number;
@@ -35,7 +63,7 @@ type InteractionPoint = {
 
 const WORLD_WIDTH = 1672;
 const WORLD_HEIGHT = 941;
-const CHARACTER_SCALE = 0.105;
+const CHARACTER_SCALE = 0.12;
 const HERO_MOVE_SPEED = 130;
 const COMPANION_MOVE_SPEED = 130;
 const COMPANION_FOLLOW_DISTANCE = 68;
@@ -43,7 +71,7 @@ const COMPANION_PATH_REFRESH_MS = 250;
 const COMPANION_TRAIL_SPACING = 14;
 const COMPANION_TRAIL_POINT_REACHED = 20;
 const WALK_STEP_DURATION = 200;
-const CHARACTER_FEET_OFFSET = 24;
+const CHARACTER_FEET_OFFSET = 29;
 const NAVIGATION_GRID_SIZE = 20;
 const NAVIGATION_BLOCKER_MARGIN = 18;
 const BUS_NAVIGATION_MARGIN = 15;
@@ -58,8 +86,13 @@ const BUS_WAYPOINT_REACHED_DISTANCE = 6;
 const BUS_EXIT_X = 650;
 const BUS_EXIT_Y = 215;
 const BUS_EXIT_RADIUS = 42;
+const FOOTBALL_PLAYER_SCALE = 1;
+const FOOTBALL_BALL_SCALE = 0.043;
+const FOOTBALL_FEET_OFFSET = 29;
+const FOOTBALL_WALK_STEP_DURATION = 190;
+const FOOTBALL_PASS_SEQUENCE = [1, 2, 3, 4, 5, 6, 7, 0];
 
-export class FirstMeetingScene extends Phaser.Scene {
+export class FirstMeetingScene extends HighResolutionScene {
   private cursors?: CursorKeys;
   private wasdKeys?: MovementKeys;
   private interactionKey?: Phaser.Input.Keyboard.Key;
@@ -67,6 +100,12 @@ export class FirstMeetingScene extends Phaser.Scene {
   private hero?: Phaser.Physics.Arcade.Sprite;
   private companion?: Phaser.Physics.Arcade.Sprite;
   private students: Phaser.GameObjects.Image[] = [];
+  private footballPlayers: FootballPlayer[] = [];
+  private footballBall?: Phaser.GameObjects.Image;
+  private footballBallShadow?: Phaser.GameObjects.Ellipse;
+  private footballPass?: FootballPass;
+  private footballHolderIndex = 1;
+  private footballPossessionDelay = 700;
   private studentIdleTweens = new Map<
     Phaser.GameObjects.Image,
     Phaser.Tweens.Tween
@@ -130,6 +169,7 @@ export class FirstMeetingScene extends Phaser.Scene {
     this.createVehicles();
     this.createCharacters();
     this.createStudents();
+    this.createFootballMatch();
     this.createInteractions();
     this.createHud();
     this.createInput();
@@ -161,6 +201,7 @@ export class FirstMeetingScene extends Phaser.Scene {
 
     this.updateCharacterAnimations();
     this.updateStudentAnimations();
+    this.updateFootballMatch(delta);
     this.hero.setDepth(1000 + this.hero.y);
     this.companion.setDepth(1000 + this.companion.y);
     this.updateNearbyInteraction();
@@ -206,12 +247,12 @@ export class FirstMeetingScene extends Phaser.Scene {
 
   private createStudents(): void {
     const placements: StudentPlacement[] = [
-      { texture: 'npc-01', x: 660, y: 700 },
-      { texture: 'npc-02', x: 725, y: 635, flipped: true },
-      { texture: 'npc-03', x: 810, y: 640 },
-      { texture: 'npc-04', x: 875, y: 710, flipped: true },
-      { texture: 'npc-06', x: 815, y: 780 },
-      { texture: 'npc-08', x: 745, y: 800, flipped: true },
+      { texture: 'npc-01', x: 675, y: 676 },
+      { texture: 'npc-02', x: 790, y: 658, flipped: true },
+      { texture: 'npc-03', x: 840, y: 691 },
+      { texture: 'npc-04', x: 850, y: 746, flipped: true },
+      { texture: 'npc-06', x: 790, y: 771 },
+      { texture: 'npc-08', x: 725, y: 776, flipped: true },
     ];
 
     this.students = placements.map((placement, index) => {
@@ -237,6 +278,150 @@ export class FirstMeetingScene extends Phaser.Scene {
 
       return student;
     });
+  }
+
+  private createFootballMatch(): void {
+    const players = [
+      {
+        texture: 'football-red-goalkeeper-01',
+        team: 'red' as const,
+        role: 'goalkeeper' as const,
+        x: 925,
+        y: 531,
+        speed: 14,
+        phaseOffset: 0,
+        waypoints: [
+          new Phaser.Math.Vector2(918, 532),
+          new Phaser.Math.Vector2(948, 524),
+        ],
+      },
+      {
+        texture: 'football-red-07',
+        team: 'red' as const,
+        role: 'field' as const,
+        x: 962,
+        y: 515,
+        speed: 18,
+        phaseOffset: 95,
+        waypoints: [
+          new Phaser.Math.Vector2(962, 515),
+          new Phaser.Math.Vector2(1012, 494),
+          new Phaser.Math.Vector2(990, 469),
+        ],
+      },
+      {
+        texture: 'football-red-09',
+        team: 'red' as const,
+        role: 'field' as const,
+        x: 1040,
+        y: 522,
+        speed: 17,
+        phaseOffset: 180,
+        waypoints: [
+          new Phaser.Math.Vector2(1040, 522),
+          new Phaser.Math.Vector2(1085, 496),
+          new Phaser.Math.Vector2(1032, 482),
+        ],
+      },
+      {
+        texture: 'football-red-11',
+        team: 'red' as const,
+        role: 'field' as const,
+        x: 1060,
+        y: 462,
+        speed: 19,
+        phaseOffset: 265,
+        waypoints: [
+          new Phaser.Math.Vector2(1060, 462),
+          new Phaser.Math.Vector2(1110, 452),
+          new Phaser.Math.Vector2(1082, 430),
+        ],
+      },
+      {
+        texture: 'football-white-goalkeeper-01',
+        team: 'white' as const,
+        role: 'goalkeeper' as const,
+        x: 1220,
+        y: 387,
+        speed: 12,
+        phaseOffset: 330,
+        waypoints: [
+          new Phaser.Math.Vector2(1203, 385),
+          new Phaser.Math.Vector2(1234, 391),
+        ],
+      },
+      {
+        texture: 'football-white-06',
+        team: 'white' as const,
+        role: 'field' as const,
+        x: 1160,
+        y: 424,
+        speed: 17,
+        phaseOffset: 410,
+        waypoints: [
+          new Phaser.Math.Vector2(1160, 424),
+          new Phaser.Math.Vector2(1190, 445),
+          new Phaser.Math.Vector2(1140, 450),
+        ],
+      },
+      {
+        texture: 'football-white-08',
+        team: 'white' as const,
+        role: 'field' as const,
+        x: 1168,
+        y: 475,
+        speed: 18,
+        phaseOffset: 495,
+        waypoints: [
+          new Phaser.Math.Vector2(1168, 475),
+          new Phaser.Math.Vector2(1125, 486),
+          new Phaser.Math.Vector2(1150, 453),
+        ],
+      },
+      {
+        texture: 'football-white-10',
+        team: 'white' as const,
+        role: 'field' as const,
+        x: 1105,
+        y: 430,
+        speed: 19,
+        phaseOffset: 580,
+        waypoints: [
+          new Phaser.Math.Vector2(1105, 430),
+          new Phaser.Math.Vector2(1143, 447),
+          new Phaser.Math.Vector2(1095, 467),
+        ],
+      },
+    ];
+
+    this.footballPlayers = players.map((player) => ({
+      sprite: this.add
+        .image(player.x, player.y, `${player.texture}-idle`)
+        .setScale(FOOTBALL_PLAYER_SCALE)
+        .setDepth(1000 + player.y),
+      idleTexture: `${player.texture}-idle`,
+      walkTexture: `${player.texture}-walk`,
+      actionTexture: `${player.texture}-${
+        player.role === 'goalkeeper' ? 'block' : 'kick'
+      }`,
+      team: player.team,
+      role: player.role,
+      waypoints: player.waypoints,
+      waypointIndex: 1,
+      speed: player.speed,
+      phaseOffset: player.phaseOffset,
+      actionUntil: 0,
+    }));
+
+    const holder = this.footballPlayers[this.footballHolderIndex].sprite;
+    const ballGroundY = holder.y + FOOTBALL_FEET_OFFSET;
+    this.footballBallShadow = this.add
+      .ellipse(holder.x, ballGroundY + 2, 10, 4, 0x17251a, 0.34)
+      .setDepth(999 + ballGroundY);
+    this.footballBall = this.add
+      .image(holder.x, ballGroundY, 'football')
+      .setScale(FOOTBALL_BALL_SCALE)
+      .setDepth(1000 + ballGroundY);
   }
 
   private createVehicles(): void {
@@ -362,7 +547,7 @@ export class FirstMeetingScene extends Phaser.Scene {
         lines: [
           {
             speaker: 'hero',
-            text: "Le bâtiment d'UNIL Sport. Le groupe s'est retrouvé juste devant.",
+            text: 'Ça ressemble à un simple point de rendez-vous devant le bâtiment d’UNIL Sport… mais quelque chose me dit que je vais m’en souvenir.',
           },
         ],
       },
@@ -1578,6 +1763,158 @@ export class FirstMeetingScene extends Phaser.Scene {
     }
   }
 
+  private updateFootballMatch(delta: number): void {
+    if (
+      this.footballPlayers.length < 2 ||
+      !this.footballBall ||
+      !this.footballBallShadow
+    ) {
+      return;
+    }
+
+    for (const player of this.footballPlayers) {
+      this.updateFootballPlayer(player, delta);
+    }
+
+    if (!this.footballPass) {
+      const holder = this.footballPlayers[this.footballHolderIndex];
+      const groundY = holder.sprite.y + FOOTBALL_FEET_OFFSET;
+      const footOffset = holder.sprite.flipX ? -6 : 6;
+      this.positionFootball(holder.sprite.x + footOffset, groundY, 0);
+      this.footballPossessionDelay -= delta;
+
+      if (this.footballPossessionDelay <= 0) {
+        const currentSequenceIndex = FOOTBALL_PASS_SEQUENCE.indexOf(
+          this.footballHolderIndex,
+        );
+        const receiverIndex =
+          FOOTBALL_PASS_SEQUENCE[
+            (currentSequenceIndex + 1) % FOOTBALL_PASS_SEQUENCE.length
+          ];
+        const receiver = this.footballPlayers[receiverIndex];
+        const shot =
+          holder.team !== receiver.team && receiver.role === 'goalkeeper';
+
+        if (holder.role === 'field') {
+          holder.actionUntil = this.time.now + 320;
+          holder.sprite.setTexture(holder.actionTexture);
+        }
+
+        this.footballPass = {
+          receiverIndex,
+          startX: this.footballBall.x,
+          startY: groundY,
+          elapsed: 0,
+          duration: shot
+            ? Phaser.Math.Between(620, 700)
+            : Phaser.Math.Between(720, 880),
+          shot,
+          goalkeeperActionTriggered: false,
+        };
+      }
+      return;
+    }
+
+    const pass = this.footballPass;
+    pass.elapsed = Math.min(pass.elapsed + delta, pass.duration);
+    const progress = pass.elapsed / pass.duration;
+    const easedProgress = Phaser.Math.Easing.Sine.InOut(progress);
+    const receiver = this.footballPlayers[pass.receiverIndex];
+    const targetGroundY = receiver.sprite.y + FOOTBALL_FEET_OFFSET;
+    const ballX = Phaser.Math.Linear(
+      pass.startX,
+      receiver.sprite.x,
+      easedProgress,
+    );
+    const groundY = Phaser.Math.Linear(pass.startY, targetGroundY, easedProgress);
+    const arcHeight = Math.sin(progress * Math.PI) * (pass.shot ? 14 : 8);
+    this.positionFootball(ballX, groundY, arcHeight);
+    this.footballBall.rotation += delta * 0.006;
+
+    if (
+      pass.shot &&
+      progress >= 0.62 &&
+      !pass.goalkeeperActionTriggered
+    ) {
+      pass.goalkeeperActionTriggered = true;
+      receiver.actionUntil = this.time.now + 520;
+      receiver.sprite.setTexture(receiver.actionTexture);
+    }
+
+    if (progress >= 1) {
+      this.footballHolderIndex = pass.receiverIndex;
+      this.footballPass = undefined;
+      this.footballPossessionDelay =
+        receiver.role === 'goalkeeper'
+          ? Phaser.Math.Between(780, 980)
+          : Phaser.Math.Between(520, 760);
+    }
+  }
+
+  private updateFootballPlayer(player: FootballPlayer, delta: number): void {
+    if (this.time.now < player.actionUntil) {
+      if (player.sprite.texture.key !== player.actionTexture) {
+        player.sprite.setTexture(player.actionTexture);
+      }
+      player.sprite
+        .setScale(FOOTBALL_PLAYER_SCALE)
+        .setAngle(0)
+        .setDepth(1000 + player.sprite.y);
+      return;
+    }
+
+    const target = player.waypoints[player.waypointIndex];
+    const direction = target
+      .clone()
+      .subtract(new Phaser.Math.Vector2(player.sprite.x, player.sprite.y));
+    const distance = direction.length();
+    const stepDistance = player.speed * (delta / 1000);
+    let moving = false;
+
+    if (distance <= stepDistance) {
+      player.sprite.setPosition(target.x, target.y);
+      player.waypointIndex = (player.waypointIndex + 1) % player.waypoints.length;
+    } else if (distance > 0) {
+      moving = true;
+      direction.normalize();
+      player.sprite.x += direction.x * stepDistance;
+      player.sprite.y += direction.y * stepDistance;
+      if (Math.abs(direction.x) > 0.08) {
+        player.sprite.setFlipX(direction.x < 0);
+      }
+    }
+
+    const useWalkingPose =
+      moving &&
+      Math.floor(
+        (this.time.now + player.phaseOffset) / FOOTBALL_WALK_STEP_DURATION,
+      ) %
+        2 ===
+        0;
+    const texture = useWalkingPose ? player.walkTexture : player.idleTexture;
+    if (player.sprite.texture.key !== texture) {
+      player.sprite.setTexture(texture);
+    }
+
+    player.sprite
+      .setAngle(0)
+      .setScale(FOOTBALL_PLAYER_SCALE)
+      .setDepth(1000 + player.sprite.y);
+  }
+
+  private positionFootball(x: number, groundY: number, arcHeight: number): void {
+    if (!this.footballBall || !this.footballBallShadow) return;
+
+    this.footballBall
+      .setPosition(x, groundY - arcHeight)
+      .setDepth(1000 + groundY);
+    this.footballBallShadow
+      .setPosition(x, groundY + 2)
+      .setScale(1 - arcHeight / 30, 1 - arcHeight / 45)
+      .setAlpha(0.34 - arcHeight * 0.014)
+      .setDepth(999 + groundY);
+  }
+
   private updateStudentTexture(
     student: Phaser.GameObjects.Image,
     walking = true,
@@ -1830,7 +2167,7 @@ export class FirstMeetingScene extends Phaser.Scene {
     }
 
     if (facing === 'left' || facing === 'right') {
-      sprite.setFlipX(!useWalkingPose && facing === 'left');
+      sprite.setFlipX(facing === 'left');
     } else {
       sprite.setFlipX(Math.floor(step / 2) % 2 === 1);
     }

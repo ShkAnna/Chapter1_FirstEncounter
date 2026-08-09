@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { finishWithTransition } from '../game/progress';
+import { HighResolutionScene } from './HighResolutionScene';
 
 type ChatItem =
   | { type: 'message'; from: 'alex' | 'anna'; text: string }
@@ -31,7 +32,7 @@ const CHAT: ChatItem[] = [
   { type: 'message', from: 'anna', text: 'Oui avec plaisir 😊' },
 ];
 
-export class WhatsAppScene extends Phaser.Scene {
+export class WhatsAppScene extends HighResolutionScene {
   private index = 0;
   private history: ChatItem[] = [];
   private messageLayer?: Phaser.GameObjects.Container;

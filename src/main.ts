@@ -15,7 +15,10 @@ const config: Phaser.Types.Core.GameConfig = {
   width: 960,
   height: 540,
   backgroundColor: '#1b1a20',
-  pixelArt: true,
+  antialias: true,
+  antialiasGL: true,
+  pixelArt: false,
+  roundPixels: false,
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,

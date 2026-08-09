@@ -4,6 +4,7 @@ import type { ChapterSceneConfig, ChapterStage, StageInteraction } from '../cont
 import { finishWithTransition } from '../game/progress';
 import type { StorySceneId } from '../game/progress';
 import { DialogueOverlay } from '../ui/DialogueOverlay';
+import { HighResolutionScene } from './HighResolutionScene';
 
 type ChapterSceneData = {
   sceneId: StorySceneId;
@@ -19,7 +20,7 @@ const WORLD_WIDTH = 1672;
 const WORLD_HEIGHT = 941;
 const CHARACTER_SCALE = 0.105;
 
-export class ChapterScene extends Phaser.Scene {
+export class ChapterScene extends HighResolutionScene {
   private config?: ChapterSceneConfig;
   private stage?: ChapterStage;
   private stageIndex = 0;

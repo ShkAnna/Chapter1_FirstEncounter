@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { startStoryScene } from '../game/progress';
 import type { StorySceneId } from '../game/progress';
+import { HighResolutionScene } from './HighResolutionScene';
 
 type TransitionData = {
   nextScene: StorySceneId | null;
@@ -8,7 +9,7 @@ type TransitionData = {
   transitionText: string;
 };
 
-export class TransitionScene extends Phaser.Scene {
+export class TransitionScene extends HighResolutionScene {
   private nextScene: StorySceneId | null = null;
 
   constructor() {
