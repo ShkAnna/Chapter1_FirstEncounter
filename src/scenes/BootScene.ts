@@ -13,6 +13,10 @@ export class BootScene extends HighResolutionScene {
       ['alex-room', 'assets/game/environments/prologue/alex-room-v5.png'],
       ['unil-sport-background', 'assets/game/environments/unil/unil-sport-v12.png'],
       ['vernand-exterior', 'assets/game/environments/vernand/exterior.png'],
+      [
+        'vernand-central-tree-overlay',
+        'assets/game/environments/vernand/central-tree-overlay.png',
+      ],
       ['vernand-briefing', 'assets/game/environments/vernand/briefing-room.png'],
       ['vernand-range', 'assets/game/environments/vernand/range-25m-v7.png'],
       ['polylan-hall', 'assets/game/environments/polylan/hall-v2.png'],

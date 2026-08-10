@@ -88,6 +88,9 @@ export function startStoryScene(scene: Phaser.Scene, sceneId: StorySceneId): voi
     case 'first_meeting':
       scene.scene.start('FirstMeetingScene');
       break;
+    case 'arrival_vernand':
+      scene.scene.start('VernandArrivalScene');
+      break;
     case 'whatsapp_miam_invitation':
       scene.scene.start('WhatsAppScene');
       break;

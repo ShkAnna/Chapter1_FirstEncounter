@@ -7,6 +7,7 @@ import { FirstMeetingScene } from './scenes/FirstMeetingScene';
 import { PrologueScene } from './scenes/PrologueScene';
 import { TitleScene } from './scenes/TitleScene';
 import { TransitionScene } from './scenes/TransitionScene';
+import { VernandArrivalScene } from './scenes/VernandArrivalScene';
 import { WhatsAppScene } from './scenes/WhatsAppScene';
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -35,6 +36,7 @@ const config: Phaser.Types.Core.GameConfig = {
     TitleScene,
     PrologueScene,
     FirstMeetingScene,
+    VernandArrivalScene,
     ChapterScene,
     WhatsAppScene,
     FinaleScene,

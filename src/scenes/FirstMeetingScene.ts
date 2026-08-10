@@ -2159,7 +2159,8 @@ export class FirstMeetingScene extends HighResolutionScene {
 
     const step = Math.floor(elapsed / WALK_STEP_DURATION);
     const useWalkingPose = step % 2 === 0;
-    const walkTexture = `${character}-walk-${facing}`;
+    const walkFacing = facing === 'left' ? 'right' : facing;
+    const walkTexture = `${character}-walk-${walkFacing}`;
     const texture = useWalkingPose ? walkTexture : idleTexture;
     const stridePhase = (elapsed / (WALK_STEP_DURATION * 2)) * Math.PI * 2;
     const stride = Math.sin(stridePhase);
@@ -2173,7 +2174,7 @@ export class FirstMeetingScene extends HighResolutionScene {
     if (facing === 'left' || facing === 'right') {
       sprite.setFlipX(facing === 'left');
     } else {
-      sprite.setFlipX(Math.floor(step / 2) % 2 === 1);
+      sprite.setFlipX(false);
     }
 
     sprite.setAngle(stride * (facing === 'left' || facing === 'right' ? 0.45 : 0.7));
